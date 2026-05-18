@@ -1,0 +1,32 @@
+[
+  {
+    "runId": "5e4f493b-b342-429e-98a6-b29a9960e378",
+    "scenarioId": "valid-login",
+    "tool": "Cypress",
+    "passed": 5,
+    "failed": 0,
+    "time": 13,
+    "status": "Passed",
+    "finishedAt": "2026-05-18T19:46:16.782Z"
+  },
+  {
+    "runId": "5e4f493b-b342-429e-98a6-b29a9960e378",
+    "scenarioId": "valid-login",
+    "tool": "Selenium",
+    "passed": 5,
+    "failed": 0,
+    "time": 19.7,
+    "status": "Passed",
+    "finishedAt": "2026-05-18T19:46:16.782Z"
+  },
+  {
+    "runId": "5e4f493b-b342-429e-98a6-b29a9960e378",
+    "scenarioId": "valid-login",
+    "tool": "Postman",
+    "passed": 5,
+    "failed": 0,
+    "time": 4.4,
+    "status": "Passed",
+    "finishedAt": "2026-05-18T19:46:16.782Z"
+  }
+]

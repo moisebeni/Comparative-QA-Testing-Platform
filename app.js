@@ -93,18 +93,30 @@ const elements = {
 };
 
 function futureApiClient() {
+  async function requestJson(url, options) {
+    const res = await fetch(url, options);
+    const payload = await res.json().catch(() => null);
+    if (!res.ok) {
+      const msg = payload?.error || `Request failed (${res.status})`;
+      throw new Error(msg);
+    }
+    return payload;
+  }
+
   return {
-    runTest: (scenarioId) => {
-      console.info("Ready to connect:", API_ENDPOINTS.runTest, { scenarioId });
-      return Promise.resolve(scenarioResultProfiles[scenarioId] ?? exampleResults);
+    runTest: async (scenarioId) => {
+      const payload = await requestJson(API_ENDPOINTS.runTest, {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ scenarioId }),
+      });
+      return payload.runId;
     },
-    getResults: () => {
-      console.info("Ready to connect:", API_ENDPOINTS.testResults);
-      return Promise.resolve(state.currentResults);
+    getResults: (runId) => {
+      return requestJson(`${API_ENDPOINTS.testResults}?runId=${encodeURIComponent(runId)}`, { method: "GET" });
     },
     getHistory: () => {
-      console.info("Ready to connect:", API_ENDPOINTS.testHistory);
-      return Promise.resolve([]);
+      return requestJson(API_ENDPOINTS.testHistory, { method: "GET" });
     },
   };
 }
@@ -204,36 +216,58 @@ async function runScenario(scenarioId) {
   appendLog("Runner", `Scenario selected: ${scenario.name}`);
   appendLog("Runner", "Initializing unified execution workflow for Cypress, Selenium, and Postman.");
 
-  const completedTools = [];
-  for (const [index, tool] of testingTools.entries()) {
-    const baseProgress = index * 30;
-    renderEnvironmentStrip(tool, completedTools);
-    appendLog(tool, "Starting environment setup.");
-    setProgress(baseProgress + 8, `Current environment: ${tool}`);
-    await sleep(500);
-    appendLog(tool, "Loading shared test data and assertions.");
-    setProgress(baseProgress + 16, `Executing ${tool} scenario`);
-    await sleep(550);
-    appendLog(tool, "Validating response, timing metrics, and final status.");
-    setProgress(baseProgress + 25, `Collecting ${tool} metrics`);
-    await sleep(500);
-    appendLog(tool, "Execution completed successfully.");
-    completedTools.push(tool);
+  let runId;
+  try {
+    runId = await apiClient.runTest(scenarioId);
+  } catch (err) {
+    state.isRunning = false;
+    state.scenarioStatuses[scenarioId] = "Failed";
+    setExecutionStatus("Failed");
+    setProgress(0, "Failed to start execution");
+    appendLog("Runner", `Failed to start: ${err?.message ?? String(err)}`);
+    renderScenarios();
+    return;
   }
 
-  const results = await apiClient.runTest(scenarioId);
-  state.currentResults = results;
-  state.scenarioStatuses[scenarioId] = results.some((result) => result.status === "Failed") ? "Failed" : "Completed";
-  state.isRunning = false;
+  let lastLogCount = 0;
+  while (true) {
+    const snapshot = await apiClient.getResults(runId).catch((err) => {
+      appendLog("Runner", `Polling error: ${err?.message ?? String(err)}`);
+      return null;
+    });
+    if (!snapshot) {
+      await sleep(700);
+      continue;
+    }
 
-  renderEnvironmentStrip(null, testingTools);
-  setProgress(100, "Execution complete");
-  setExecutionStatus(state.scenarioStatuses[scenarioId]);
-  appendLog("Runner", "Comparison table and recommendation generated.");
-  renderResults(results);
-  renderRecommendation(results, scenario.name);
-  updateStats(results, state.scenarioStatuses[scenarioId]);
-  renderScenarios();
+    const progress = snapshot.progress ?? { percent: 0, label: "Waiting", activeTool: null, completedTools: [] };
+    renderEnvironmentStrip(progress.activeTool, progress.completedTools ?? []);
+    setProgress(progress.percent ?? 0, progress.label ?? "Running");
+    setExecutionStatus(snapshot.status ?? "Running");
+    elements.lastRunStatus.textContent = snapshot.status ?? "Running";
+
+    const logs = Array.isArray(snapshot.logs) ? snapshot.logs : [];
+    for (const entry of logs.slice(lastLogCount)) {
+      appendLog(entry.tool ?? "Runner", entry.message ?? "");
+    }
+    lastLogCount = logs.length;
+
+    if (snapshot.status === "Completed" || snapshot.status === "Failed") {
+      const results = Array.isArray(snapshot.results) ? snapshot.results : [];
+      state.currentResults = results;
+      state.scenarioStatuses[scenarioId] = snapshot.status === "Failed" ? "Failed" : "Completed";
+      state.isRunning = false;
+
+      renderEnvironmentStrip(null, testingTools);
+      renderResults(results);
+      renderRecommendation(results, scenario.name);
+      updateStats(results, state.scenarioStatuses[scenarioId]);
+      renderScenarios();
+      return;
+    }
+
+    await sleep(650);
+  }
 }
 
 function renderEmptyResults() {

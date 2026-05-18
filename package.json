@@ -4,7 +4,8 @@
   "private": true,
   "description": "Static dashboard for comparing Cypress, Selenium, and Postman QA test execution results.",
   "scripts": {
-    "start": "npx serve .",
+    "start": "node server.js",
+    "dev": "node server.js",
     "deploy": "npx wrangler pages deploy . --project-name comparative-qa-testing-platform"
   },
   "devDependencies": {
