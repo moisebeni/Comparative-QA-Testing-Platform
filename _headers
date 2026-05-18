@@ -1,0 +1,13 @@
+/*
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: DENY
+  Referrer-Policy: strict-origin-when-cross-origin
+
+/styles.css
+  Cache-Control: no-cache
+
+/interface-v3.css
+  Cache-Control: no-cache
+
+/app.js
+  Cache-Control: no-cache

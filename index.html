@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Comparative QA Testing Platform</title>
+    <link rel="stylesheet" href="interface-v3.css" />
+  </head>
+  <body>
+    <div class="ambient-grid" aria-hidden="true"></div>
+
+    <header class="topbar">
+      <a href="#overview" class="brand" aria-label="Comparative QA Testing Platform home">
+        <span class="brand-mark">QA</span>
+        <span class="brand-text">Comparative QA</span>
+      </a>
+
+      <nav class="nav-list" aria-label="Platform navigation">
+        <a href="#scenarios">Scenarios</a>
+        <a href="#execution">Execution</a>
+        <a href="#results">Results</a>
+        <a href="#tools">Tools</a>
+      </nav>
+
+      <a class="topbar-action" href="#scenarios">Run comparison</a>
+    </header>
+
+    <main class="page">
+      <section class="hero" id="overview">
+        <div class="hero-copy reveal">
+          <div class="hero-label">
+            <span></span>
+            Bachelor thesis demo
+          </div>
+          <h1>Compare QA tools from one clean testing workspace.</h1>
+          <p class="subtitle">
+            A modern interface for executing the same scenario in Cypress, Selenium, and Postman, then comparing
+            results by speed, stability, passed tests, and final status.
+          </p>
+
+          <div class="hero-actions">
+            <a class="primary-link" href="#scenarios">Start a scenario</a>
+            <button class="secondary-button" id="loadMockResultsButton" type="button">Load example results</button>
+          </div>
+        </div>
+
+        <aside class="hero-lab reveal" aria-label="Execution preview">
+          <div class="lab-topline">
+            <span class="pulse-dot"></span>
+            <span>Unified runner</span>
+          </div>
+
+          <div class="lab-orbit" aria-hidden="true">
+            <div class="lab-node cypress">Cy</div>
+            <div class="lab-node selenium">Se</div>
+            <div class="lab-node postman">Pm</div>
+            <div class="lab-core">API</div>
+          </div>
+
+          <div class="hero-summary">
+            <div>
+              <span class="summary-label">Best tool</span>
+              <strong id="heroBestTool">Postman</strong>
+            </div>
+            <div>
+              <span class="summary-label">Average time</span>
+              <strong id="heroAvgTime">11.4s</strong>
+            </div>
+          </div>
+        </aside>
+      </section>
+
+      <section class="stats-grid reveal" aria-label="Dashboard statistics">
+        <article class="stat-card">
+          <span>Total Scenarios</span>
+          <strong>5</strong>
+        </article>
+        <article class="stat-card">
+          <span>Testing Tools</span>
+          <strong>3</strong>
+        </article>
+        <article class="stat-card">
+          <span>Last Run Status</span>
+          <strong id="lastRunStatus">Not Started</strong>
+        </article>
+        <article class="stat-card">
+          <span>Best Performing Tool</span>
+          <strong id="bestToolStat">Pending</strong>
+        </article>
+        <article class="stat-card">
+          <span>Average Execution Time</span>
+          <strong id="avgTimeStat">--</strong>
+        </article>
+      </section>
+
+      <section class="workspace">
+        <section class="panel reveal" id="scenarios">
+          <div class="section-header">
+            <div>
+              <p class="section-eyebrow">Scenario catalog</p>
+              <h2>Select a shared QA workflow</h2>
+            </div>
+            <span class="counter">5 scenarios</span>
+          </div>
+          <div class="scenario-list" id="scenarioList"></div>
+        </section>
+
+        <section class="panel execution-panel reveal" id="execution">
+          <div class="section-header">
+            <div>
+              <p class="section-eyebrow">Live execution</p>
+              <h2>Runner timeline</h2>
+            </div>
+            <span class="status-badge idle" id="executionBadge">Idle</span>
+          </div>
+
+          <div class="selected-scenario">
+            <span>Selected scenario</span>
+            <strong id="selectedScenarioName">Choose a scenario to begin</strong>
+          </div>
+
+          <div class="environment-strip" id="environmentStrip"></div>
+
+          <div class="progress-block">
+            <div class="progress-meta">
+              <span id="progressLabel">Waiting for execution</span>
+              <strong id="progressValue">0%</strong>
+            </div>
+            <div class="progress-track">
+              <div class="progress-bar" id="progressBar"></div>
+            </div>
+          </div>
+
+          <div class="logs-area" aria-live="polite" id="logsArea">
+            <p class="muted-log">Execution logs will appear here after a scenario starts.</p>
+          </div>
+        </section>
+      </section>
+
+      <section class="panel results-panel reveal" id="results">
+        <div class="section-header">
+          <div>
+            <p class="section-eyebrow">Comparison output</p>
+            <h2>Results matrix</h2>
+          </div>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Testing Tool</th>
+                <th>Passed Tests</th>
+                <th>Failed Tests</th>
+                <th>Execution Time</th>
+                <th>Stability Score</th>
+                <th>Final Status</th>
+              </tr>
+            </thead>
+            <tbody id="resultsTableBody">
+              <tr>
+                <td colspan="6" class="empty-table">Run a scenario to generate comparison results.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="recommendation-card reveal" id="recommendationCard" hidden>
+        <div>
+          <p class="section-eyebrow">Final recommendation</p>
+          <h2 id="recommendationTitle">Recommended Tool</h2>
+        </div>
+        <p id="recommendationText"></p>
+      </section>
+
+      <section class="tool-overview reveal" id="tools">
+        <div class="section-header">
+          <div>
+            <p class="section-eyebrow">Tool overview</p>
+            <h2>Where each environment fits</h2>
+          </div>
+        </div>
+
+        <div class="tool-grid">
+          <article class="tool-card cypress">
+            <span class="tool-logo">Cy</span>
+            <h3>Cypress</h3>
+            <p>Modern frontend and end-to-end testing with strong developer feedback.</p>
+          </article>
+          <article class="tool-card selenium">
+            <span class="tool-logo">Se</span>
+            <h3>Selenium</h3>
+            <p>Cross-browser automation for compatibility and browser coverage.</p>
+          </article>
+          <article class="tool-card postman">
+            <span class="tool-logo">Pm</span>
+            <h3>Postman</h3>
+            <p>Backend and API validation with fast direct request execution.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="api-strip reveal" aria-label="Future API endpoints">
+        <span>Backend-ready</span>
+        <code>POST /api/run-test</code>
+        <code>GET /api/test-results</code>
+        <code>GET /api/test-history</code>
+      </section>
+    </main>
+
+    <script src="app.js"></script>
+  </body>
+</html>
