@@ -22,45 +22,44 @@
         <a href="#tools">Tools</a>
       </nav>
 
-      <a class="topbar-action" href="#scenarios">Run comparison</a>
+      <a class="topbar-action" href="#scenarios">Run QA tests</a>
     </header>
 
     <main class="page">
       <section class="hero" id="overview">
         <div class="hero-copy reveal">
-          <h1>Compare QA tools from one clean testing workspace.</h1>
+          <h1>Run real Cypress and Postman tests from one clean workspace.</h1>
           <p class="subtitle">
-            A modern interface for executing the same scenario in Cypress, Selenium, and Postman, then comparing
-            results by speed, stability, passed tests, and final status.
+            A modern interface for executing matching Cypress specs and Postman folders, then tracking results by
+            speed, stability, passed tests, and final status.
           </p>
 
           <div class="hero-actions">
             <a class="primary-link" href="#scenarios">Start a scenario</a>
-            <button class="secondary-button" id="loadMockResultsButton" type="button">Load example results</button>
           </div>
         </div>
 
         <aside class="hero-lab reveal" aria-label="Execution preview">
           <div class="lab-topline">
             <span class="pulse-dot"></span>
-            <span>Unified runner</span>
+            <span>QA runner</span>
           </div>
 
           <div class="lab-orbit" aria-hidden="true">
             <div class="lab-node cypress">Cy</div>
-            <div class="lab-node selenium">Se</div>
-            <div class="lab-node postman">Pm</div>
-            <div class="lab-core">API</div>
+            <div class="lab-node selenium">Fx</div>
+            <div class="lab-node postman">Su</div>
+            <div class="lab-core">E2E</div>
           </div>
 
           <div class="hero-summary">
             <div>
               <span class="summary-label">Best tool</span>
-              <strong id="heroBestTool">Postman</strong>
+              <strong id="heroBestTool">Pending</strong>
             </div>
             <div>
               <span class="summary-label">Average time</span>
-              <strong id="heroAvgTime">11.4s</strong>
+              <strong id="heroAvgTime">--</strong>
             </div>
           </div>
         </aside>
@@ -68,12 +67,12 @@
 
       <section class="stats-grid reveal" aria-label="Dashboard statistics">
         <article class="stat-card">
-          <span>Total Scenarios</span>
-          <strong>5</strong>
+          <span>Total Scripts</span>
+          <strong>9</strong>
         </article>
         <article class="stat-card">
           <span>Testing Tools</span>
-          <strong>3</strong>
+          <strong>2</strong>
         </article>
         <article class="stat-card">
           <span>Last Run Status</span>
@@ -93,10 +92,10 @@
         <section class="panel reveal" id="scenarios">
           <div class="section-header">
             <div>
-              <p class="section-eyebrow">Scenario catalog</p>
-              <h2>Select a shared QA workflow</h2>
+              <p class="section-eyebrow">QA script catalog</p>
+              <h2>Select a real workflow</h2>
             </div>
-            <span class="counter">5 scenarios</span>
+            <span class="counter">9 scripts</span>
           </div>
           <div class="scenario-list" id="scenarioList"></div>
         </section>
@@ -174,7 +173,7 @@
         <div class="section-header">
           <div>
             <p class="section-eyebrow">Tool overview</p>
-            <h2>Where each environment fits</h2>
+            <h2>What the runner uses</h2>
           </div>
         </div>
 
@@ -182,17 +181,17 @@
           <article class="tool-card cypress">
             <span class="tool-logo">Cy</span>
             <h3>Cypress</h3>
-            <p>Modern frontend and end-to-end testing with strong developer feedback.</p>
+            <p>Browser-level E2E specs copied from the CypressLicenta repository.</p>
           </article>
           <article class="tool-card selenium">
-            <span class="tool-logo">Se</span>
-            <h3>Selenium</h3>
-            <p>Cross-browser automation for compatibility and browser coverage.</p>
-          </article>
-          <article class="tool-card postman">
             <span class="tool-logo">Pm</span>
             <h3>Postman</h3>
-            <p>Backend and API validation with fast direct request execution.</p>
+            <p>API workflows from the Licenta Postman collection, executed through Newman.</p>
+          </article>
+          <article class="tool-card postman">
+            <span class="tool-logo">Env</span>
+            <h3>Environment</h3>
+            <p>Shared variables from the Licenta Postman environment and Cypress fixtures.</p>
           </article>
         </div>
       </section>

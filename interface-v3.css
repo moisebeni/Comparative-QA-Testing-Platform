@@ -526,9 +526,7 @@ h3 {
 
 .workspace {
   display: grid;
-  grid-template-columns: minmax(390px, 0.95fr) minmax(490px, 1.05fr);
   gap: 22px;
-  align-items: start;
 }
 
 .panel,
@@ -585,6 +583,7 @@ h3 {
 }
 
 .scenario-status.completed,
+.scenario-status.passed,
 .status-badge.completed,
 .final-status.passed {
   color: var(--green);
@@ -598,6 +597,16 @@ h3 {
   background: #ffedeb;
 }
 
+.scenario-status.queued {
+  color: #4b5563;
+  background: #eef1f5;
+}
+
+.scenario-status.not-integrated {
+  color: #596274;
+  background: #e8edf4;
+}
+
 .scenario-list {
   display: grid;
   gap: 12px;
@@ -606,8 +615,8 @@ h3 {
 .scenario-card {
   position: relative;
   display: grid;
-  grid-template-columns: 46px minmax(0, 1fr) auto;
-  align-items: start;
+  grid-template-columns: 46px minmax(0, 1fr) max-content;
+  align-items: center;
   gap: 16px;
   padding: 18px;
   border: 1px solid var(--line);
@@ -624,7 +633,7 @@ h3 {
   width: 34px;
   height: 34px;
   grid-column: 1;
-  grid-row: 1 / span 2;
+  grid-row: 1;
   border-radius: 12px;
   color: var(--blue);
   background: #eef4ff;
@@ -670,11 +679,20 @@ h3 {
 
 .scenario-actions {
   grid-column: 3;
-  display: grid;
+  display: flex;
+  align-items: center;
   justify-items: center;
-  align-content: start;
-  gap: 22px;
-  padding-top: 18px;
+  justify-content: flex-end;
+  gap: 12px;
+  white-space: nowrap;
+}
+
+.scenario-statuses {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 8px;
+  max-width: 520px;
 }
 
 .selected-scenario {
@@ -691,37 +709,27 @@ h3 {
 
 .environment-strip {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
   gap: 10px;
   margin-bottom: 18px;
 }
 
 .environment-pill {
   position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
   padding: 16px;
   border-radius: 22px;
   overflow: hidden;
   transition: transform 180ms ease, border-color 180ms ease;
 }
 
-.environment-pill::before {
-  content: "";
-  position: absolute;
-  inset: auto 14px 12px;
-  height: 4px;
-  border-radius: 999px;
-  background: #e6eaf0;
-}
-
 .environment-pill.active {
   transform: translateY(-3px);
   border-color: rgba(36, 107, 254, 0.35);
   background: #eef4ff;
-}
-
-.environment-pill.active::before {
-  background: linear-gradient(90deg, var(--blue), var(--cyan));
-  animation: shimmer 1.1s linear infinite;
 }
 
 .environment-pill strong,
@@ -737,14 +745,49 @@ h3 {
 
 .environment-pill span {
   margin-top: 5px;
-  margin-bottom: 14px;
   color: var(--muted);
   font-size: 0.78rem;
   font-weight: 850;
 }
 
+.environment-indicator {
+  width: 34px;
+  height: 34px;
+  flex: 0 0 auto;
+  margin-top: 0;
+  border: 3px solid #dfe6f0;
+  border-radius: 50%;
+}
+
+.environment-pill.active .environment-indicator {
+  border-color: rgba(36, 107, 254, 0.18);
+  border-top-color: var(--blue);
+  animation: spin 850ms linear infinite;
+}
+
+.environment-pill.completed .environment-indicator {
+  display: grid;
+  place-items: center;
+  border-color: var(--blue);
+  background: var(--blue);
+}
+
+.environment-pill.completed .environment-indicator::before {
+  content: "";
+  width: 9px;
+  height: 15px;
+  border: solid #ffffff;
+  border-width: 0 3px 3px 0;
+  transform: rotate(45deg) translate(-1px, -1px);
+}
+
 .progress-block {
+  width: 100%;
   margin-bottom: 18px;
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.74);
 }
 
 .progress-meta {
@@ -769,8 +812,12 @@ h3 {
   transition: width 260ms ease;
 }
 
-.status-badge.running ~ * .progress-bar,
-.progress-bar[style*="100"] {
+.progress-bar.completed {
+  background: #123f8c;
+  animation: none;
+}
+
+.status-badge.running ~ * .progress-bar:not(.completed) {
   background-size: 180% 100%;
   animation: gradientMove 1.4s linear infinite;
 }
@@ -1043,6 +1090,12 @@ tbody tr:hover {
   }
 }
 
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 @keyframes gradientMove {
   to {
     background-position: 180% 0;
@@ -1150,11 +1203,18 @@ tbody tr:hover {
 
   .scenario-actions {
     grid-column: 2;
+    flex-wrap: wrap;
     justify-items: stretch;
+    justify-content: flex-start;
+  }
+
+  .scenario-statuses {
+    justify-content: flex-start;
+    max-width: none;
   }
 
   .scenario-card::before {
-    grid-row: 1 / span 2;
+    grid-row: 1;
   }
 
   .primary-button,

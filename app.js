@@ -4,69 +4,60 @@ const API_ENDPOINTS = {
   testHistory: "/api/test-history",
 };
 
-const testingTools = ["Cypress", "Selenium", "Postman"];
+const testingTools = ["Cypress", "Postman"];
+const scenarioStatusTools = ["Cypress", "Postman", "Selenium"];
 
 const scenarios = [
   {
-    id: "valid-login",
-    name: "Valid Login Test",
-    description: "Verifies that a registered user can authenticate successfully and reach the protected dashboard.",
+    id: "editEntryTimeManagementAnnex",
+    name: "editEntryTimeManagementAnnex.cy.js",
+    description: "Runs the matching Cypress spec and Postman folder for an annex-based time management edit.",
   },
   {
-    id: "invalid-login",
-    name: "Invalid Login Test",
-    description: "Checks that invalid credentials are rejected and the correct validation response is displayed.",
+    id: "editEntryTimeManagementPhase",
+    name: "editEntryTimeManagementPhase.cy.js",
+    description: "Runs the matching Cypress spec and Postman folder for a phase-based time management edit.",
   },
   {
-    id: "user-data-validation",
-    name: "User Data Validation Test",
-    description: "Compares how each tool validates profile payloads, required fields, and frontend error states.",
+    id: "editSubmitEntryTimeOff",
+    name: "editSubmitEntryTimeOff.cy.js",
+    description: "Runs the Cypress spec for editing and submitting a time-off entry.",
   },
   {
-    id: "create-resource",
-    name: "Create Resource Test",
-    description: "Executes a resource creation workflow and verifies persisted response data across the three environments.",
+    id: "submitEntryTimeManagementAnnex",
+    name: "submitEntryTimeManagementAnnex.cy.js",
+    description: "Runs the matching Cypress spec and Postman folder for an annex-based time management submit.",
   },
   {
-    id: "logout-invalid-token",
-    name: "Logout / Invalid Token Test",
-    description: "Confirms session logout behavior and validates API protection when an expired or invalid token is used.",
+    id: "submitEntryTimeManagementPhase",
+    name: "submitEntryTimeManagementPhase.cy.js",
+    description: "Runs the matching Cypress spec and Postman folder for a phase-based time management submit.",
+  },
+  {
+    id: "timePageTimeEntryTeamTabApproveAnnex",
+    name: "timePageTimeEntryTeamTabApproveAnnex.cy.js",
+    description: "Runs the matching Cypress spec and Postman folder for approving an annex time entry.",
+  },
+  {
+    id: "timePageTimeEntryTeamTabApprovePhase",
+    name: "timePageTimeEntryTeamTabApprovePhase.cy.js",
+    description: "Runs the matching Cypress spec and Postman folder for approving a phase time entry.",
+  },
+  {
+    id: "timePageTimeEntryTeamTabRefuseAnnex",
+    name: "timePageTimeEntryTeamTabRefuseAnnex.cy.js",
+    description: "Runs the matching Cypress spec and Postman folder for refusing an annex time entry.",
+  },
+  {
+    id: "timePageTimeEntryTeamTabRefusePhase",
+    name: "timePageTimeEntryTeamTabRefusePhase.cy.js",
+    description: "Runs the matching Cypress spec and Postman folder for refusing a phase time entry.",
   },
 ];
-
-const exampleResults = [
-  { tool: "Cypress", passed: 5, failed: 0, time: 12.4, stability: 96, status: "Passed" },
-  { tool: "Selenium", passed: 5, failed: 0, time: 18.7, stability: 89, status: "Passed" },
-  { tool: "Postman", passed: 5, failed: 0, time: 3.1, stability: 98, status: "Passed" },
-];
-
-const scenarioResultProfiles = {
-  "valid-login": exampleResults,
-  "invalid-login": [
-    { tool: "Cypress", passed: 4, failed: 0, time: 10.8, stability: 95, status: "Passed" },
-    { tool: "Selenium", passed: 4, failed: 0, time: 16.3, stability: 88, status: "Passed" },
-    { tool: "Postman", passed: 4, failed: 0, time: 2.7, stability: 98, status: "Passed" },
-  ],
-  "user-data-validation": [
-    { tool: "Cypress", passed: 6, failed: 0, time: 13.6, stability: 94, status: "Passed" },
-    { tool: "Selenium", passed: 6, failed: 1, time: 21.5, stability: 83, status: "Failed" },
-    { tool: "Postman", passed: 7, failed: 0, time: 4.2, stability: 97, status: "Passed" },
-  ],
-  "create-resource": [
-    { tool: "Cypress", passed: 5, failed: 0, time: 14.8, stability: 93, status: "Passed" },
-    { tool: "Selenium", passed: 5, failed: 0, time: 22.1, stability: 86, status: "Passed" },
-    { tool: "Postman", passed: 5, failed: 0, time: 3.8, stability: 99, status: "Passed" },
-  ],
-  "logout-invalid-token": [
-    { tool: "Cypress", passed: 4, failed: 0, time: 11.9, stability: 94, status: "Passed" },
-    { tool: "Selenium", passed: 4, failed: 0, time: 17.6, stability: 87, status: "Passed" },
-    { tool: "Postman", passed: 5, failed: 0, time: 2.9, stability: 98, status: "Passed" },
-  ],
-};
 
 const state = {
   selectedScenarioId: null,
-  scenarioStatuses: Object.fromEntries(scenarios.map((scenario) => [scenario.id, "Not Started"])),
+  scenarioToolStatuses: Object.fromEntries(scenarios.map((scenario) => [scenario.id, createInitialToolStatuses()])),
   isRunning: false,
   currentResults: null,
 };
@@ -89,7 +80,6 @@ const elements = {
   avgTimeStat: document.querySelector("#avgTimeStat"),
   heroBestTool: document.querySelector("#heroBestTool"),
   heroAvgTime: document.querySelector("#heroAvgTime"),
-  loadMockResultsButton: document.querySelector("#loadMockResultsButton"),
   scrollTopButton: document.querySelector("#scrollTopButton"),
 };
 
@@ -124,10 +114,18 @@ function futureApiClient() {
 
 const apiClient = futureApiClient();
 
+function createInitialToolStatuses() {
+  return {
+    Cypress: "Not Started",
+    Postman: "Not Started",
+    Selenium: "Not Integrated",
+  };
+}
+
 function renderScenarios() {
   elements.scenarioList.innerHTML = scenarios
     .map((scenario, index) => {
-      const status = state.scenarioStatuses[scenario.id];
+      const statuses = state.scenarioToolStatuses[scenario.id] ?? createInitialToolStatuses();
       return `
         <article class="scenario-card" data-index="${String(index + 1).padStart(2, "0")}">
           <div class="scenario-content">
@@ -135,9 +133,16 @@ function renderScenarios() {
             <p>${scenario.description}</p>
           </div>
           <div class="scenario-actions">
-            <span class="scenario-status ${statusClass(status)}">${status}</span>
+            <div class="scenario-statuses" aria-label="Tool statuses">
+              ${scenarioStatusTools
+                .map((tool) => {
+                  const status = statuses[tool] ?? "Not Started";
+                  return `<span class="scenario-status ${statusClass(status)}">${tool} ${status}</span>`;
+                })
+                .join("")}
+            </div>
             <button class="primary-button" data-scenario-id="${scenario.id}" type="button" ${state.isRunning ? "disabled" : ""}>
-              Run in All Environments
+              Run QA Test
             </button>
           </div>
         </article>
@@ -151,10 +156,14 @@ function renderEnvironmentStrip(activeTool = null, completedTools = []) {
     .map((tool) => {
       const isActive = activeTool === tool;
       const status = completedTools.includes(tool) ? "Completed" : isActive ? "Running" : "Queued";
+      const statusClassName = statusClass(status);
       return `
-        <div class="environment-pill ${isActive ? "active" : ""}">
-          <strong>${tool}</strong>
-          <span>${status}</span>
+        <div class="environment-pill ${isActive ? "active" : ""} ${statusClassName}">
+          <div>
+            <strong>${tool}</strong>
+            <span>${status}</span>
+          </div>
+          <span class="environment-indicator" aria-hidden="true"></span>
         </div>
       `;
     })
@@ -172,8 +181,39 @@ function setExecutionStatus(status) {
 
 function setProgress(percent, label) {
   elements.progressBar.style.width = `${percent}%`;
+  elements.progressBar.classList.toggle("completed", percent >= 100);
   elements.progressValue.textContent = `${percent}%`;
   elements.progressLabel.textContent = label;
+}
+
+function updateScenarioToolStatusesFromProgress(scenarioId, progress) {
+  const completedTools = progress.completedTools ?? [];
+  const activeTool = progress.activeTool;
+  const statuses = createInitialToolStatuses();
+
+  for (const tool of testingTools) {
+    if (completedTools.includes(tool)) {
+      statuses[tool] = "Completed";
+    } else if (activeTool === tool) {
+      statuses[tool] = "Running";
+    } else {
+      statuses[tool] = "Queued";
+    }
+  }
+
+  statuses.Selenium = "Not Integrated";
+  state.scenarioToolStatuses[scenarioId] = statuses;
+}
+
+function updateScenarioToolStatusesFromResults(scenarioId, results) {
+  const statuses = createInitialToolStatuses();
+
+  for (const result of results) {
+    statuses[result.tool] = result.status;
+  }
+
+  statuses.Selenium = "Not Integrated";
+  state.scenarioToolStatuses[scenarioId] = statuses;
 }
 
 function appendLog(tool, message) {
@@ -199,12 +239,17 @@ async function runScenario(scenarioId) {
   const scenario = scenarios.find((item) => item.id === scenarioId);
   state.selectedScenarioId = scenarioId;
   state.isRunning = true;
-  state.scenarioStatuses[scenarioId] = "Running";
+  state.scenarioToolStatuses[scenarioId] = {
+    Cypress: "Running",
+    Postman: "Queued",
+    Selenium: "Not Integrated",
+  };
   state.currentResults = null;
 
+  document.querySelector("#execution")?.scrollIntoView({ behavior: "smooth", block: "start" });
   renderScenarios();
   clearLogs();
-  renderEnvironmentStrip("Cypress");
+  renderEnvironmentStrip("Cypress", [], 0);
   renderEmptyResults();
   setExecutionStatus("Running");
   setProgress(0, "Preparing shared test scenario");
@@ -215,14 +260,18 @@ async function runScenario(scenarioId) {
   elements.avgTimeStat.textContent = "--";
 
   appendLog("Runner", `Scenario selected: ${scenario.name}`);
-  appendLog("Runner", "Initializing unified execution workflow for Cypress, Selenium, and Postman.");
+  appendLog("Runner", "Initializing real Cypress and Postman execution workflow.");
 
   let runId;
   try {
     runId = await apiClient.runTest(scenarioId);
   } catch (err) {
     state.isRunning = false;
-    state.scenarioStatuses[scenarioId] = "Failed";
+    state.scenarioToolStatuses[scenarioId] = {
+      Cypress: "Failed",
+      Postman: "Queued",
+      Selenium: "Not Integrated",
+    };
     setExecutionStatus("Failed");
     setProgress(0, "Failed to start execution");
     appendLog("Runner", `Failed to start: ${err?.message ?? String(err)}`);
@@ -246,6 +295,8 @@ async function runScenario(scenarioId) {
     setProgress(progress.percent ?? 0, progress.label ?? "Running");
     setExecutionStatus(snapshot.status ?? "Running");
     elements.lastRunStatus.textContent = snapshot.status ?? "Running";
+    updateScenarioToolStatusesFromProgress(scenarioId, progress);
+    renderScenarios();
 
     const logs = Array.isArray(snapshot.logs) ? snapshot.logs : [];
     for (const entry of logs.slice(lastLogCount)) {
@@ -256,13 +307,13 @@ async function runScenario(scenarioId) {
     if (snapshot.status === "Completed" || snapshot.status === "Failed") {
       const results = Array.isArray(snapshot.results) ? snapshot.results : [];
       state.currentResults = results;
-      state.scenarioStatuses[scenarioId] = snapshot.status === "Failed" ? "Failed" : "Completed";
+      updateScenarioToolStatusesFromResults(scenarioId, results);
       state.isRunning = false;
 
       renderEnvironmentStrip(null, testingTools);
       renderResults(results);
       renderRecommendation(results, scenario.name);
-      updateStats(results, state.scenarioStatuses[scenarioId]);
+      updateStats(results, snapshot.status === "Failed" ? "Failed" : "Completed");
       renderScenarios();
       return;
     }
@@ -305,21 +356,23 @@ function renderRecommendation(results, scenarioName) {
   const best = getBestTool(results);
   const fastest = [...results].sort((a, b) => a.time - b.time)[0];
   const mostStable = [...results].sort((a, b) => b.stability - a.stability)[0];
+  const passedTieCount = results.filter((result) => result.passed === best.passed).length;
 
   elements.recommendationTitle.textContent = `${best.tool} is recommended for ${scenarioName}`;
   elements.recommendationText.textContent =
-    `${best.tool} produced the strongest combined outcome for this scenario, balancing execution time, passed tests, failed tests, and stability score. ` +
-    `${fastest.tool} had the fastest execution time because it can validate the most direct layer of the system for this workflow. ` +
-    `Cypress remains effective for modern frontend end-to-end validation, Selenium remains useful for cross-browser scenarios, and Postman is strongest for backend API validation. ` +
+    `${best.tool} is recommended because it has the highest number of passed tests in this run (${best.passed}). ` +
+    `Passed tests are the primary recommendation rule. ` +
+    (passedTieCount > 1 ? `Because more than one tool had ${best.passed} passed tests, failed tests and execution time were used as tie-breakers. ` : "") +
+    `${fastest.tool} had the fastest execution time. ` +
     `The highest stability score in this run was ${mostStable.stability}% from ${mostStable.tool}.`;
   elements.recommendationCard.hidden = false;
 }
 
 function getBestTool(results) {
   return [...results].sort((a, b) => {
-    const scoreA = a.passed * 20 - a.failed * 35 + a.stability - a.time;
-    const scoreB = b.passed * 20 - b.failed * 35 + b.stability - b.time;
-    return scoreB - scoreA;
+    if (b.passed !== a.passed) return b.passed - a.passed;
+    if (a.failed !== b.failed) return a.failed - b.failed;
+    return a.time - b.time;
   })[0];
 }
 
@@ -334,29 +387,12 @@ function updateStats(results, status) {
   elements.heroAvgTime.textContent = `${avgTime.toFixed(1)}s`;
 }
 
-function loadExampleResults() {
-  state.currentResults = exampleResults;
-  state.selectedScenarioId = "valid-login";
-  state.scenarioStatuses["valid-login"] = "Completed";
-  elements.selectedScenarioName.textContent = "Valid Login Test";
-  setExecutionStatus("Completed");
-  setProgress(100, "Example results loaded");
-  clearLogs();
-  renderEnvironmentStrip(null, testingTools);
-  appendLog("Runner", "Example result set loaded for thesis demonstration.");
-  renderResults(exampleResults);
-  renderRecommendation(exampleResults, "Valid Login Test");
-  updateStats(exampleResults, "Completed");
-  renderScenarios();
-}
-
 elements.scenarioList.addEventListener("click", (event) => {
   const button = event.target.closest("[data-scenario-id]");
   if (!button) return;
   runScenario(button.dataset.scenarioId);
 });
 
-elements.loadMockResultsButton.addEventListener("click", loadExampleResults);
 elements.scrollTopButton.addEventListener("click", () => {
   window.scrollTo({ top: 0, behavior: "smooth" });
 });

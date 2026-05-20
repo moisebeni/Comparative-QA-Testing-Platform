@@ -2,13 +2,16 @@
   "name": "comparative-qa-testing-platform",
   "version": "1.0.0",
   "private": true,
-  "description": "Static dashboard for comparing Cypress, Selenium, and Postman QA test execution results.",
+  "description": "Static dashboard for running real Cypress QA test execution results.",
   "scripts": {
     "start": "node server.js",
     "dev": "node server.js",
+    "cypress:run": "cypress run",
     "deploy": "npx wrangler pages deploy . --project-name comparative-qa-testing-platform"
   },
   "devDependencies": {
+    "cypress": "^15.15.0",
+    "newman": "^6.2.1",
     "serve": "^14.2.4",
     "wrangler": "^4.19.1"
   }

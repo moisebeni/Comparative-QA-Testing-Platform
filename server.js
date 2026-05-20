@@ -8,11 +8,28 @@ const { randomUUID } = require("node:crypto");
 const ROOT_DIR = __dirname;
 const DATA_DIR = path.join(ROOT_DIR, "data");
 const HISTORY_PATH = path.join(DATA_DIR, "test-history.json");
+const CYPRESS_SPEC_DIR = "cypress/e2e";
+const POSTMAN_COLLECTION_PATH = "postman/collections/Licenta.postman_collection.json";
+const POSTMAN_ENVIRONMENT_PATH = "postman/environments/Licenta.postman_environment.json";
+const POSTMAN_ENVIRONMENT_VALUES_PATH = "postman/environments/Licenta_values.postman_environment.json";
+const NEWMAN_REPORT_DIR = path.join(DATA_DIR, "newman-reports");
 
 const PORT = Number.parseInt(process.env.PORT ?? "5173", 10);
 const HOST = process.env.HOST ?? "127.0.0.1";
 
-const testingTools = ["Cypress", "Selenium", "Postman"];
+const testingTools = ["Cypress", "Postman"];
+
+const postmanFolderByScenario = {
+  editEntryTimeManagementAnnex: "editEntryTimeManagementAnnex",
+  editEntryTimeManagementPhase: "editEntryTimeManagementPhase",
+  editSubmitEntryTimeOff: null,
+  submitEntryTimeManagementAnnex: "submitEntryTimeManagamentAnnex",
+  submitEntryTimeManagementPhase: "submitEntryTimeManagamentPhase",
+  timePageTimeEntryTeamTabApproveAnnex: "timePageTimeEntryTeamTabApproveAnnex",
+  timePageTimeEntryTeamTabApprovePhase: "timePageTimeEntryTeamTabApprovePhase",
+  timePageTimeEntryTeamTabRefuseAnnex: "timePageTimeEntryTeamTabRefuseAnnex",
+  timePageTimeEntryTeamTabRefusePhase: "timePageTimeEntryTeamTabRefusePhase",
+};
 
 function nowIso() {
   return new Date().toISOString();
@@ -115,30 +132,37 @@ async function persistRunToHistory(run) {
   await writeJsonFileAtomic(HISTORY_PATH, history);
 }
 
-function toolCommand(tool, scenarioId) {
-  // These are the intended "real runners". If the binaries are missing,
-  // we fall back to simulation so the UI flow still works for demos.
+function toolCommand(tool, scenarioId, runId) {
   if (tool === "Cypress") {
-    // Example: ./node_modules/.bin/cypress run --spec tests/cypress/valid-login.cy.js
     return {
       cmd: process.platform === "win32" ? "node_modules\\.bin\\cypress.cmd" : "./node_modules/.bin/cypress",
-      args: ["run", "--spec", `tests/cypress/${scenarioId}.cy.js`],
+      args: ["run", "--browser", "chrome", "--spec", `${CYPRESS_SPEC_DIR}/${scenarioId}.cy.js`],
     };
   }
-  if (tool === "Selenium") {
-    // Example: python -m pytest tests/selenium/test_valid_login.py
-    // We map scenarioId to file name via underscores.
-    const py = process.platform === "win32" ? "python" : "python3";
-    const file = `tests/selenium/test_${scenarioId.replaceAll("-", "_")}.py`;
-    return { cmd: py, args: ["-m", "pytest", file] };
-  }
+
   if (tool === "Postman") {
-    // Example: ./node_modules/.bin/newman run tests/postman/collection.json --folder valid-login
+    const folder = postmanFolderByScenario[scenarioId];
+    const reportPath = path.join(NEWMAN_REPORT_DIR, `${runId}-${scenarioId}.json`);
+    const environmentPath = path.join(NEWMAN_REPORT_DIR, `${runId}-${scenarioId}.environment.json`);
     return {
       cmd: process.platform === "win32" ? "node_modules\\.bin\\newman.cmd" : "./node_modules/.bin/newman",
-      args: ["run", "tests/postman/comparative-qa.postman_collection.json", "--folder", scenarioId],
+      args: [
+        "run",
+        POSTMAN_COLLECTION_PATH,
+        "--environment",
+        environmentPath,
+        "--folder",
+        folder,
+        "--reporters",
+        "cli,json",
+        "--reporter-json-export",
+        reportPath,
+      ],
+      reportPath,
+      environmentPath,
     };
   }
+
   return null;
 }
 
@@ -151,83 +175,215 @@ async function pathExists(relPath) {
   }
 }
 
-async function isToolRunnable(tool, scenarioId) {
-  if (tool === "Cypress") {
-    const hasBin = await pathExists(process.platform === "win32" ? "node_modules/.bin/cypress.cmd" : "node_modules/.bin/cypress");
-    const hasSpec = await pathExists(`tests/cypress/${scenarioId}.cy.js`);
-    return hasBin && hasSpec;
+async function readPostmanCollection() {
+  return readJsonFile(path.join(ROOT_DIR, POSTMAN_COLLECTION_PATH), null);
+}
+
+async function buildPostmanRuntimeEnvironment(outputPath) {
+  const baseEnvironment = await readJsonFile(path.join(ROOT_DIR, POSTMAN_ENVIRONMENT_PATH), null);
+  const valuesEnvironment = await readJsonFile(path.join(ROOT_DIR, POSTMAN_ENVIRONMENT_VALUES_PATH), null);
+  const baseValues = baseEnvironment?.values ?? [];
+  const rawValues = valuesEnvironment?.values ?? [];
+
+  if (!baseEnvironment || baseValues.length === 0) {
+    throw new Error(`Invalid Postman environment: ${POSTMAN_ENVIRONMENT_PATH}`);
   }
 
-  if (tool === "Postman") {
-    const hasBin = await pathExists(process.platform === "win32" ? "node_modules/.bin/newman.cmd" : "node_modules/.bin/newman");
-    const hasCollection = await pathExists("tests/postman/comparative-qa.postman_collection.json");
-    return hasBin && hasCollection;
-  }
+  const merged = {
+    ...baseEnvironment,
+    name: baseEnvironment.name ?? "Licenta",
+    values: baseValues.map((variable, index) => {
+      const valueSource = rawValues[index];
+      const exportedValue = valueSource?.value || valueSource?.key || variable.value || "";
+      return {
+        ...variable,
+        value: exportedValue,
+        enabled: variable.enabled !== false,
+      };
+    }),
+  };
 
-  if (tool === "Selenium") {
-    const file = `tests/selenium/test_${scenarioId.replaceAll("-", "_")}.py`;
-    const hasTest = await pathExists(file);
-    if (!hasTest) return false;
-    const py = process.platform === "win32" ? "python" : "python3";
-    return new Promise((resolve) => {
-      const child = spawn(py, ["-c", "import pytest"], { cwd: ROOT_DIR, stdio: "ignore" });
-      child.on("error", () => resolve(false));
-      child.on("close", (code) => resolve(code === 0));
-    });
-  }
+  await writeJsonFileAtomic(outputPath, merged);
+  return outputPath;
+}
 
+function hasPostmanFolder(collection, folderName) {
+  const stack = [...(collection?.item ?? [])];
+  while (stack.length > 0) {
+    const item = stack.shift();
+    if (item?.name === folderName) return true;
+    if (Array.isArray(item?.item)) stack.push(...item.item);
+  }
   return false;
 }
 
-async function simulateTool(run, tool) {
-  appendLog(run, tool, "Runner binary not available; using simulated execution.");
-  appendLog(run, tool, "Starting environment setup.");
-  await sleep(450);
-  appendLog(run, tool, "Loading shared test data and assertions.");
-  await sleep(520);
-  appendLog(run, tool, "Executing scenario.");
-  await sleep(700);
-  appendLog(run, tool, "Collecting metrics.");
-  await sleep(420);
+async function toolReadiness(tool, scenarioId) {
+  if (tool === "Cypress") {
+    const hasBin = await pathExists(process.platform === "win32" ? "node_modules/.bin/cypress.cmd" : "node_modules/.bin/cypress");
+    const hasSpec = await pathExists(`${CYPRESS_SPEC_DIR}/${scenarioId}.cy.js`);
+    if (!hasBin) return { ok: false, reason: "Cypress is not installed. Run npm install before executing tests." };
+    if (!hasSpec) return { ok: false, reason: `Missing Cypress spec: ${CYPRESS_SPEC_DIR}/${scenarioId}.cy.js` };
+    return { ok: true, reason: "" };
+  }
 
-  // Reasonable defaults for demo; will be overwritten by history stability.
-  const base = tool === "Postman" ? 3.2 : tool === "Cypress" ? 12.4 : 18.6;
+  if (tool === "Postman") {
+    const folder = postmanFolderByScenario[scenarioId];
+    if (!folder) return { ok: false, reason: `No Postman folder mapped for ${scenarioId}.` };
+
+    const hasBin = await pathExists(process.platform === "win32" ? "node_modules/.bin/newman.cmd" : "node_modules/.bin/newman");
+    const hasCollection = await pathExists(POSTMAN_COLLECTION_PATH);
+    const hasEnvironment = await pathExists(POSTMAN_ENVIRONMENT_PATH);
+    const hasEnvironmentValues = await pathExists(POSTMAN_ENVIRONMENT_VALUES_PATH);
+    if (!hasBin) return { ok: false, reason: "Newman is not installed. Run npm install before executing Postman tests." };
+    if (!hasCollection) return { ok: false, reason: `Missing Postman collection: ${POSTMAN_COLLECTION_PATH}` };
+    if (!hasEnvironment) return { ok: false, reason: `Missing Postman environment: ${POSTMAN_ENVIRONMENT_PATH}` };
+    if (!hasEnvironmentValues) return { ok: false, reason: `Missing Postman environment values: ${POSTMAN_ENVIRONMENT_VALUES_PATH}` };
+
+    const collection = await readPostmanCollection();
+    if (!hasPostmanFolder(collection, folder)) return { ok: false, reason: `Missing Postman folder: ${folder}` };
+    return { ok: true, reason: "" };
+  }
+
+  return { ok: false, reason: `No real runner configured for ${tool}.` };
+}
+
+function stripJsComments(source) {
+  return source
+    .replace(/\/\*[\s\S]*?\*\//g, "")
+    .replace(/^\s*\/\/.*$/gm, "");
+}
+
+async function countCypressIts(scenarioId) {
+  const specPath = path.join(ROOT_DIR, CYPRESS_SPEC_DIR, `${scenarioId}.cy.js`);
+  const source = await fsp.readFile(specPath, "utf8");
+  return [...stripJsComments(source).matchAll(/\bit(?:\.only|\.skip)?\s*\(/g)].length;
+}
+
+function countFromSpecOutput(stdout, label) {
+  const matches = [...stdout.matchAll(new RegExp(`(\\d+)\\s+${label}\\b`, "gi"))];
+  if (matches.length === 0) return 0;
+  return Number.parseInt(matches[matches.length - 1][1], 10);
+}
+
+function resultFromCypressSpecOutput(stdout, fallbackDurationSec, exitCode) {
+  const passed = countFromSpecOutput(stdout, "passing");
+  const failed = countFromSpecOutput(stdout, "failing");
+  const durationMatch = stdout.match(/(\d+):(\d+)\s+\d+\s+\d+\s+\d+\s+[–-]\s+[–-]/);
+  const duration = durationMatch
+    ? Number.parseInt(durationMatch[1], 10) * 60 + Number.parseInt(durationMatch[2], 10)
+    : fallbackDurationSec;
+
   return {
-    tool,
-    passed: 5,
-    failed: 0,
-    time: Number((base + Math.random() * 1.4).toFixed(1)),
+    tool: "Cypress",
+    passed,
+    failed: failed || (exitCode === 0 ? 0 : 1),
+    time: Number(duration.toFixed(1)),
     stability: null,
-    status: "Passed",
+    status: failed === 0 && exitCode === 0 ? "Passed" : "Failed",
   };
 }
 
-async function runToolReal(run, tool, scenarioId) {
-  const runnable = await isToolRunnable(tool, scenarioId);
-  if (!runnable) return simulateTool(run, tool);
+async function resultFromPostmanReport(reportPath, fallbackDurationSec, exitCode) {
+  const report = await readJsonFile(reportPath, null);
+  const assertions = report?.run?.stats?.assertions ?? {};
+  const total = Number.isFinite(assertions.total) ? assertions.total : 0;
+  const failed = Number.isFinite(assertions.failed) ? assertions.failed : exitCode === 0 ? 0 : 1;
+  const timings = report?.run?.timings ?? {};
+  const durationMs = Number.isFinite(timings.completed) && Number.isFinite(timings.started)
+    ? timings.completed - timings.started
+    : fallbackDurationSec * 1000;
 
-  const spec = toolCommand(tool, scenarioId);
-  if (!spec) return simulateTool(run, tool);
+  return {
+    tool: "Postman",
+    passed: Math.max(0, total - failed),
+    failed,
+    time: Number((durationMs / 1000).toFixed(1)),
+    stability: null,
+    status: failed === 0 && exitCode === 0 ? "Passed" : "Failed",
+  };
+}
+
+async function runToolReal(run, tool, scenarioId, progressStart, progressEnd) {
+  const readiness = await toolReadiness(tool, scenarioId);
+  if (!readiness.ok) {
+    appendLog(run, tool, readiness.reason);
+    return {
+      tool,
+      passed: 0,
+      failed: 1,
+      time: 0,
+      stability: null,
+      status: "Failed",
+    };
+  }
+
+  const spec = toolCommand(tool, scenarioId, run.runId);
+  if (!spec) {
+    appendLog(run, tool, `No command configured for ${tool}.`);
+    return { tool, passed: 0, failed: 1, time: 0, stability: null, status: "Failed" };
+  }
+
+  if (spec.reportPath) await fsp.mkdir(path.dirname(spec.reportPath), { recursive: true });
+  if (tool === "Postman") {
+    await buildPostmanRuntimeEnvironment(spec.environmentPath);
+    appendLog(run, tool, "Merged Postman environment keys with Licenta_values runtime values.");
+  }
+
+  const totalTests = tool === "Cypress" ? await countCypressIts(scenarioId) : 0;
+  let completedTests = 0;
 
   return new Promise((resolve) => {
     let finished = false;
     let sawOutput = false;
+    let stdout = "";
     const startedAt = Date.now();
 
     appendLog(run, tool, `Launching: ${spec.cmd} ${spec.args.join(" ")}`);
 
     const child = spawn(spec.cmd, spec.args, {
       cwd: ROOT_DIR,
-      env: process.env,
+      env: {
+        ...process.env,
+        CYPRESS_BASE_URL: process.env.CYPRESS_BASE_URL ?? `http://${HOST}:${PORT}`,
+      },
       stdio: ["ignore", "pipe", "pipe"],
     });
 
     const onLine = (kind) => (chunk) => {
       sawOutput = true;
       const textChunk = chunk.toString("utf8");
+      if (kind === "out") stdout += textChunk;
       for (const line of textChunk.split(/\r?\n/)) {
         if (!line.trim()) continue;
         appendLog(run, tool, `${kind}: ${line}`);
+        if (tool === "Cypress" && line.includes("(Run Starting)")) {
+          run.progress.percent = Math.max(run.progress.percent, progressStart + 2);
+          run.progress.label = "Cypress run started";
+        }
+        if (tool === "Cypress" && line.includes("Running:")) {
+          run.progress.percent = Math.max(run.progress.percent, progressStart + 5);
+          run.progress.label = "Cypress spec is running";
+        }
+        if (tool === "Cypress" && /^(\s*)(✓|√|✖|×|\d+\))\s+/.test(line)) {
+          completedTests = Math.min(totalTests || completedTests + 1, completedTests + 1);
+          const percent = totalTests > 0
+            ? Math.min(progressEnd - 1, Math.round(progressStart + (completedTests / totalTests) * (progressEnd - progressStart)))
+            : run.progress.percent;
+          run.progress.percent = Math.max(run.progress.percent, percent);
+          run.progress.label = `Completed ${completedTests}${totalTests ? ` of ${totalTests}` : ""} Cypress tests`;
+        }
+        if (tool === "Cypress" && line.includes("(Run Finished)")) {
+          run.progress.percent = Math.max(run.progress.percent, progressEnd - 1);
+          run.progress.label = "Cypress run finished";
+        }
+        if (tool === "Postman" && line.includes("→")) {
+          run.progress.percent = Math.max(run.progress.percent, progressStart + 8);
+          run.progress.label = "Postman requests are running";
+        }
+        if (tool === "Postman" && /┌|│|└|executions|assertions/i.test(line)) {
+          run.progress.percent = Math.max(run.progress.percent, progressEnd - 3);
+          run.progress.label = "Postman run summary generated";
+        }
       }
     };
 
@@ -237,9 +393,8 @@ async function runToolReal(run, tool, scenarioId) {
     child.on("error", async (err) => {
       if (finished) return;
       finished = true;
-      appendLog(run, tool, `Runner failed to start (${err.message}). Falling back to simulation.`);
-      const simulated = await simulateTool(run, tool);
-      resolve(simulated);
+      appendLog(run, tool, `Runner failed to start: ${err.message}`);
+      resolve({ tool, passed: 0, failed: 1, time: 0, stability: null, status: "Failed" });
     });
 
     child.on("close", async (code) => {
@@ -248,20 +403,14 @@ async function runToolReal(run, tool, scenarioId) {
       const durationSec = (Date.now() - startedAt) / 1000;
       appendLog(run, tool, `Process exit code: ${code}`);
 
-      // Minimal parsing: without tool-specific reporters, we can't reliably extract passed/failed.
-      // For thesis demo we keep a stable normalized output and improve later by adding reporters.
-      const status = code === 0 ? "Passed" : "Failed";
-      const result = {
-        tool,
-        passed: status === "Passed" ? 5 : 4,
-        failed: status === "Passed" ? 0 : 1,
-        time: Number(durationSec.toFixed(1)),
-        stability: null,
-        status,
-      };
-
       if (!sawOutput) appendLog(run, tool, "No output captured from runner.");
-      resolve(result);
+      resolve(
+        tool === "Cypress"
+          ? resultFromCypressSpecOutput(stdout, durationSec, code)
+          : tool === "Postman"
+            ? await resultFromPostmanReport(spec.reportPath, durationSec, code)
+          : { tool, passed: 0, failed: code === 0 ? 0 : 1, time: Number(durationSec.toFixed(1)), stability: null, status: code === 0 ? "Passed" : "Failed" }
+      );
     });
   });
 }
@@ -275,7 +424,7 @@ async function executeRun(runId, scenarioId) {
   run.progress = { percent: 0, label: "Preparing shared test scenario", activeTool: "Cypress", completedTools: [] };
 
   appendLog(run, "Runner", `Scenario selected: ${scenarioId}`);
-  appendLog(run, "Runner", "Initializing unified execution workflow for Cypress, Selenium, and Postman.");
+  appendLog(run, "Runner", "Initializing real Cypress execution workflow.");
 
   const history = await readJsonFile(HISTORY_PATH, []);
 
@@ -285,16 +434,16 @@ async function executeRun(runId, scenarioId) {
   for (const [index, tool] of testingTools.entries()) {
     run.progress.activeTool = tool;
     run.progress.completedTools = [...completedTools];
-    run.progress.percent = Math.min(95, index * 32 + 6);
+    run.progress.percent = 0;
     run.progress.label = `Current environment: ${tool}`;
 
-    const result = await runToolReal(run, tool, scenarioId);
+    const result = await runToolReal(run, tool, scenarioId, 0, 100);
     const stability = computeStability(history, scenarioId, tool);
     results.push({ ...result, stability: stability ?? 95 });
     completedTools.push(tool);
 
     run.progress.completedTools = [...completedTools];
-    run.progress.percent = Math.min(98, index * 32 + 30);
+    run.progress.percent = 100;
     run.progress.label = `${tool} completed`;
   }
 
