@@ -1,6 +1,6 @@
 :root {
   color-scheme: light;
-  --bg: #f6f7fb;
+  --bg: #eceff5;
   --surface: rgba(255, 255, 255, 0.82);
   --surface-solid: #ffffff;
   --surface-muted: #f1f4f8;
@@ -42,9 +42,9 @@ body::before {
   inset: 0;
   z-index: -3;
   background:
-    linear-gradient(135deg, rgba(36, 107, 254, 0.12), transparent 34%),
-    linear-gradient(225deg, rgba(0, 168, 143, 0.1), transparent 32%),
-    linear-gradient(180deg, #fbfcff 0%, #f4f6fb 46%, #eef2f7 100%);
+    linear-gradient(135deg, rgba(36, 107, 254, 0.15), transparent 34%),
+    linear-gradient(225deg, rgba(0, 168, 143, 0.13), transparent 32%),
+    linear-gradient(180deg, #f2f4f8 0%, #e9edf4 46%, #dde4ee 100%);
 }
 
 .ambient-grid {
@@ -178,6 +178,7 @@ button {
 .panel,
 .stat-card,
 .recommendation-card,
+.tool-overview,
 .tool-card,
 .api-strip {
   border: 1px solid var(--line);
@@ -308,6 +309,44 @@ h3 {
   opacity: 0.56;
   transform: none;
   box-shadow: none;
+}
+
+.scroll-top-button {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  z-index: 40;
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  border: 1px solid rgba(255, 255, 255, 0.72);
+  border-radius: 50%;
+  color: #ffffff;
+  background: var(--ink);
+  box-shadow: 0 18px 38px rgba(16, 21, 34, 0.22);
+  cursor: pointer;
+  transition: transform 180ms ease, box-shadow 180ms ease, background 180ms ease;
+}
+
+.scroll-top-button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 22px 46px rgba(16, 21, 34, 0.28);
+}
+
+.scroll-top-button:focus-visible {
+  outline: 3px solid rgba(36, 107, 254, 0.35);
+  outline-offset: 4px;
+}
+
+.scroll-top-button svg {
+  width: 22px;
+  height: 22px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
 
 .hero-lab {
@@ -567,7 +606,8 @@ h3 {
 .scenario-card {
   position: relative;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-columns: 46px minmax(0, 1fr) auto;
+  align-items: start;
   gap: 16px;
   padding: 18px;
   border: 1px solid var(--line);
@@ -583,7 +623,8 @@ h3 {
   place-items: center;
   width: 34px;
   height: 34px;
-  margin-bottom: 14px;
+  grid-column: 1;
+  grid-row: 1 / span 2;
   border-radius: 12px;
   color: var(--blue);
   background: #eef4ff;
@@ -611,6 +652,11 @@ h3 {
   transform: scaleY(1);
 }
 
+.scenario-content {
+  grid-column: 2;
+  min-width: 0;
+}
+
 .scenario-card h3 {
   font-size: 1.05rem;
 }
@@ -623,10 +669,12 @@ h3 {
 }
 
 .scenario-actions {
+  grid-column: 3;
   display: grid;
-  justify-items: end;
-  align-content: space-between;
-  gap: 12px;
+  justify-items: center;
+  align-content: start;
+  gap: 22px;
+  padding-top: 18px;
 }
 
 .selected-scenario {
@@ -1063,6 +1111,13 @@ tbody tr:hover {
     padding: 24px 0 44px;
   }
 
+  .scroll-top-button {
+    right: 16px;
+    bottom: 16px;
+    width: 46px;
+    height: 46px;
+  }
+
   h1 {
     font-size: clamp(2.6rem, 15vw, 4rem);
   }
@@ -1090,11 +1145,16 @@ tbody tr:hover {
   }
 
   .scenario-card {
-    grid-template-columns: 1fr;
+    grid-template-columns: 46px minmax(0, 1fr);
   }
 
   .scenario-actions {
+    grid-column: 2;
     justify-items: stretch;
+  }
+
+  .scenario-card::before {
+    grid-row: 1 / span 2;
   }
 
   .primary-button,

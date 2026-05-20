@@ -90,6 +90,7 @@ const elements = {
   heroBestTool: document.querySelector("#heroBestTool"),
   heroAvgTime: document.querySelector("#heroAvgTime"),
   loadMockResultsButton: document.querySelector("#loadMockResultsButton"),
+  scrollTopButton: document.querySelector("#scrollTopButton"),
 };
 
 function futureApiClient() {
@@ -129,7 +130,7 @@ function renderScenarios() {
       const status = state.scenarioStatuses[scenario.id];
       return `
         <article class="scenario-card" data-index="${String(index + 1).padStart(2, "0")}">
-          <div>
+          <div class="scenario-content">
             <h3>${scenario.name}</h3>
             <p>${scenario.description}</p>
           </div>
@@ -356,6 +357,9 @@ elements.scenarioList.addEventListener("click", (event) => {
 });
 
 elements.loadMockResultsButton.addEventListener("click", loadExampleResults);
+elements.scrollTopButton.addEventListener("click", () => {
+  window.scrollTo({ top: 0, behavior: "smooth" });
+});
 
 renderScenarios();
 renderEnvironmentStrip();
