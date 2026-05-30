@@ -2,16 +2,22 @@
   "name": "comparative-qa-testing-platform",
   "version": "1.0.0",
   "private": true,
-  "description": "Static dashboard for running real Cypress QA test execution results.",
+  "description": "Static dashboard for running real Cypress, Selenium, and Postman QA test execution results.",
   "scripts": {
     "start": "node server.js",
     "dev": "node server.js",
     "cypress:run": "cypress run",
+    "selenium:run": "mocha \"selenium/e2e/**/*.js\" --timeout 180000",
     "deploy": "npx wrangler pages deploy . --project-name comparative-qa-testing-platform"
   },
   "devDependencies": {
+    "chai": "^6.2.2",
     "cypress": "^15.15.0",
+    "dotenv": "^17.4.2",
+    "mocha": "^11.7.6",
+    "mochawesome": "^7.1.4",
     "newman": "^6.2.1",
+    "selenium-webdriver": "^4.44.0",
     "serve": "^14.2.4",
     "wrangler": "^4.19.1"
   }

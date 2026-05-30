@@ -28,5 +28,1145 @@
     "time": 4.4,
     "status": "Passed",
     "finishedAt": "2026-05-18T19:46:16.782Z"
+  },
+  {
+    "runId": "26339608-3304-4394-aa53-3c4e8a6cfe32",
+    "scenarioId": "valid-login",
+    "tool": "Cypress",
+    "passed": 5,
+    "failed": 0,
+    "time": 12.7,
+    "status": "Passed",
+    "finishedAt": "2026-05-20T11:23:09.752Z"
+  },
+  {
+    "runId": "26339608-3304-4394-aa53-3c4e8a6cfe32",
+    "scenarioId": "valid-login",
+    "tool": "Selenium",
+    "passed": 5,
+    "failed": 0,
+    "time": 19.1,
+    "status": "Passed",
+    "finishedAt": "2026-05-20T11:23:09.752Z"
+  },
+  {
+    "runId": "26339608-3304-4394-aa53-3c4e8a6cfe32",
+    "scenarioId": "valid-login",
+    "tool": "Postman",
+    "passed": 5,
+    "failed": 0,
+    "time": 4.1,
+    "status": "Passed",
+    "finishedAt": "2026-05-20T11:23:09.752Z"
+  },
+  {
+    "runId": "85a22084-0aab-467a-a2f4-421a4d548c6e",
+    "scenarioId": "valid-login",
+    "tool": "Cypress",
+    "passed": 5,
+    "failed": 0,
+    "time": 13.4,
+    "status": "Passed",
+    "finishedAt": "2026-05-20T20:29:54.912Z"
+  },
+  {
+    "runId": "85a22084-0aab-467a-a2f4-421a4d548c6e",
+    "scenarioId": "valid-login",
+    "tool": "Selenium",
+    "passed": 5,
+    "failed": 0,
+    "time": 19.7,
+    "status": "Passed",
+    "finishedAt": "2026-05-20T20:29:54.912Z"
+  },
+  {
+    "runId": "85a22084-0aab-467a-a2f4-421a4d548c6e",
+    "scenarioId": "valid-login",
+    "tool": "Postman",
+    "passed": 5,
+    "failed": 0,
+    "time": 4.2,
+    "status": "Passed",
+    "finishedAt": "2026-05-20T20:29:54.912Z"
+  },
+  {
+    "runId": "a93b3786-dbfc-424f-a0f2-9e7d9fc28dd5",
+    "scenarioId": "editEntryTimeManagementAnnex",
+    "tool": "Cypress",
+    "passed": 7,
+    "failed": 3,
+    "time": 56.8,
+    "status": "Failed",
+    "finishedAt": "2026-05-20T20:48:32.513Z"
+  },
+  {
+    "runId": "a9644756-dff2-4940-ab72-242369ac5039",
+    "scenarioId": "editEntryTimeManagementAnnex",
+    "tool": "Cypress",
+    "passed": 10,
+    "failed": 0,
+    "time": 58.3,
+    "status": "Passed",
+    "finishedAt": "2026-05-20T20:53:29.830Z"
+  },
+  {
+    "runId": "21e51f7f-3e40-4486-8690-dad6f7f90fed",
+    "scenarioId": "editEntryTimeManagementAnnex",
+    "tool": "Cypress",
+    "passed": 10,
+    "failed": 0,
+    "time": 62,
+    "status": "Passed",
+    "finishedAt": "2026-05-20T20:56:40.339Z"
+  },
+  {
+    "runId": "9f76f0d7-96b9-4f2b-86e1-3e831d5ff0d4",
+    "scenarioId": "editEntryTimeManagementAnnex",
+    "tool": "Cypress",
+    "passed": 10,
+    "failed": 0,
+    "time": 64,
+    "status": "Passed",
+    "finishedAt": "2026-05-20T20:59:57.963Z"
+  },
+  {
+    "runId": "880105e4-93d0-49e0-b2c1-9a816c2c0d5d",
+    "scenarioId": "editEntryTimeManagementPhase",
+    "tool": "Cypress",
+    "passed": 10,
+    "failed": 0,
+    "time": 62.7,
+    "status": "Passed",
+    "finishedAt": "2026-05-20T21:01:16.841Z"
+  },
+  {
+    "runId": "9db6af39-b5f1-42c8-8d5a-353e84a1f106",
+    "scenarioId": "editSubmitEntryTimeOff",
+    "tool": "Cypress",
+    "passed": 12,
+    "failed": 0,
+    "time": 37.9,
+    "status": "Passed",
+    "finishedAt": "2026-05-20T21:02:16.114Z"
+  },
+  {
+    "runId": "1798c470-9270-425d-b4c0-2f1b1315a93c",
+    "scenarioId": "submitEntryTimeManagementAnnex",
+    "tool": "Cypress",
+    "passed": 13,
+    "failed": 0,
+    "time": 79.8,
+    "status": "Passed",
+    "finishedAt": "2026-05-20T21:03:50.919Z"
+  },
+  {
+    "runId": "8508a163-2b47-4de0-b0e0-bd8e729dbd8b",
+    "scenarioId": "submitEntryTimeManagementPhase",
+    "tool": "Cypress",
+    "passed": 13,
+    "failed": 0,
+    "time": 82.1,
+    "status": "Passed",
+    "finishedAt": "2026-05-20T21:05:20.966Z"
+  },
+  {
+    "runId": "9ae48979-ebe5-4710-be76-d793b4010676",
+    "scenarioId": "timePageTimeEntryTeamTabApproveAnnex",
+    "tool": "Cypress",
+    "passed": 0,
+    "failed": 1,
+    "time": 19,
+    "status": "Failed",
+    "finishedAt": "2026-05-20T21:09:28.750Z"
+  },
+  {
+    "runId": "2521a9ad-1fbe-4c26-9f3b-3e9b4c867868",
+    "scenarioId": "timePageTimeEntryTeamTabApprovePhase",
+    "tool": "Cypress",
+    "passed": 7,
+    "failed": 0,
+    "time": 43.2,
+    "status": "Passed",
+    "finishedAt": "2026-05-20T21:10:57.193Z"
+  },
+  {
+    "runId": "2b68a866-28c1-45e7-abaf-40a39f4a5d7a",
+    "scenarioId": "timePageTimeEntryTeamTabRefuseAnnex",
+    "tool": "Cypress",
+    "passed": 8,
+    "failed": 0,
+    "time": 41.2,
+    "status": "Passed",
+    "finishedAt": "2026-05-20T21:12:22.562Z"
+  },
+  {
+    "runId": "d2985b96-839b-40a1-b79b-8b2ed78ca84d",
+    "scenarioId": "timePageTimeEntryTeamTabRefusePhase",
+    "tool": "Cypress",
+    "passed": 8,
+    "failed": 0,
+    "time": 42.6,
+    "status": "Passed",
+    "finishedAt": "2026-05-20T21:14:27.442Z"
+  },
+  {
+    "runId": "c059657c-b5c1-4542-b238-8d99958c63e9",
+    "scenarioId": "editEntryTimeManagementPhase",
+    "tool": "Cypress",
+    "passed": 10,
+    "failed": 0,
+    "time": 62,
+    "status": "Passed",
+    "finishedAt": "2026-05-20T21:15:56.857Z"
+  },
+  {
+    "runId": "e1f3a085-b678-4499-b6dd-ea17b9fa7f3d",
+    "scenarioId": "editSubmitEntryTimeOff",
+    "tool": "Cypress",
+    "passed": 12,
+    "failed": 0,
+    "time": 37.9,
+    "status": "Passed",
+    "finishedAt": "2026-05-20T21:17:44.389Z"
+  },
+  {
+    "runId": "72d132aa-21c4-4993-b285-b324440a3cdf",
+    "scenarioId": "submitEntryTimeManagementAnnex",
+    "tool": "Cypress",
+    "passed": 13,
+    "failed": 0,
+    "time": 79.7,
+    "status": "Passed",
+    "finishedAt": "2026-05-20T21:20:07.133Z"
+  },
+  {
+    "runId": "f43f53e5-9e34-467f-8075-68f051cfc936",
+    "scenarioId": "submitEntryTimeManagementPhase",
+    "tool": "Cypress",
+    "passed": 13,
+    "failed": 0,
+    "time": 84.8,
+    "status": "Passed",
+    "finishedAt": "2026-05-20T21:30:55.706Z"
+  },
+  {
+    "runId": "99c1f031-7ba4-4acd-87aa-ba4609f4e4d7",
+    "scenarioId": "timePageTimeEntryTeamTabApprovePhase",
+    "tool": "Cypress",
+    "passed": 7,
+    "failed": 0,
+    "time": 49.9,
+    "status": "Passed",
+    "finishedAt": "2026-05-20T21:47:59.915Z"
+  },
+  {
+    "runId": "99c1f031-7ba4-4acd-87aa-ba4609f4e4d7",
+    "scenarioId": "timePageTimeEntryTeamTabApprovePhase",
+    "tool": "Postman",
+    "passed": 0,
+    "failed": 6,
+    "time": 0.3,
+    "status": "Failed",
+    "finishedAt": "2026-05-20T21:47:59.915Z"
+  },
+  {
+    "runId": "5e615bfa-0d05-4865-ba32-c86d870fa48c",
+    "scenarioId": "timePageTimeEntryTeamTabRefuseAnnex",
+    "tool": "Cypress",
+    "passed": 8,
+    "failed": 0,
+    "time": 44.6,
+    "status": "Passed",
+    "finishedAt": "2026-05-20T21:58:55.546Z"
+  },
+  {
+    "runId": "5e615bfa-0d05-4865-ba32-c86d870fa48c",
+    "scenarioId": "timePageTimeEntryTeamTabRefuseAnnex",
+    "tool": "Postman",
+    "passed": 6,
+    "failed": 1,
+    "time": 2,
+    "status": "Failed",
+    "finishedAt": "2026-05-20T21:58:55.546Z"
+  },
+  {
+    "runId": "742ad3b0-e46c-40e9-8bf3-d1f76e3dcaf9",
+    "scenarioId": "editSubmitEntryTimeOff",
+    "tool": "Cypress",
+    "passed": 12,
+    "failed": 0,
+    "time": 38.2,
+    "status": "Passed",
+    "finishedAt": "2026-05-20T22:00:05.110Z"
+  },
+  {
+    "runId": "742ad3b0-e46c-40e9-8bf3-d1f76e3dcaf9",
+    "scenarioId": "editSubmitEntryTimeOff",
+    "tool": "Postman",
+    "passed": 0,
+    "failed": 1,
+    "time": 0,
+    "status": "Failed",
+    "finishedAt": "2026-05-20T22:00:05.110Z"
+  },
+  {
+    "runId": "5362241a-a35c-4491-90ca-552efdca62b3",
+    "scenarioId": "editEntryTimeManagementAnnex",
+    "tool": "Cypress",
+    "passed": 10,
+    "failed": 0,
+    "time": 62.1,
+    "status": "Passed",
+    "finishedAt": "2026-05-20T22:03:03.059Z"
+  },
+  {
+    "runId": "5362241a-a35c-4491-90ca-552efdca62b3",
+    "scenarioId": "editEntryTimeManagementAnnex",
+    "tool": "Postman",
+    "passed": 5,
+    "failed": 0,
+    "time": 1.5,
+    "status": "Passed",
+    "finishedAt": "2026-05-20T22:03:03.059Z"
+  },
+  {
+    "runId": "79c24ec4-d1a4-4486-a06b-6e136e666f8d",
+    "scenarioId": "timePageTimeEntryTeamTabApprovePhase",
+    "tool": "Cypress",
+    "passed": 7,
+    "failed": 0,
+    "time": 48.1,
+    "status": "Passed",
+    "finishedAt": "2026-05-20T22:12:25.778Z"
+  },
+  {
+    "runId": "79c24ec4-d1a4-4486-a06b-6e136e666f8d",
+    "scenarioId": "timePageTimeEntryTeamTabApprovePhase",
+    "tool": "Postman",
+    "passed": 6,
+    "failed": 1,
+    "time": 1.8,
+    "status": "Failed",
+    "finishedAt": "2026-05-20T22:12:25.778Z"
+  },
+  {
+    "runId": "bdc9f2c6-2dfc-4580-a121-1027ffcf3c1b",
+    "scenarioId": "timePageTimeEntryTeamTabApprovePhase",
+    "tool": "Cypress",
+    "passed": 7,
+    "failed": 0,
+    "time": 42.7,
+    "status": "Passed",
+    "finishedAt": "2026-05-20T22:13:46.212Z"
+  },
+  {
+    "runId": "bdc9f2c6-2dfc-4580-a121-1027ffcf3c1b",
+    "scenarioId": "timePageTimeEntryTeamTabApprovePhase",
+    "tool": "Postman",
+    "passed": 6,
+    "failed": 1,
+    "time": 1.8,
+    "status": "Failed",
+    "finishedAt": "2026-05-20T22:13:46.212Z"
+  },
+  {
+    "runId": "5f308b8b-b1f0-44c6-a3cd-b85df4479fcf",
+    "scenarioId": "editEntryTimeManagementAnnex",
+    "tool": "Cypress",
+    "passed": 10,
+    "failed": 0,
+    "time": 61.6,
+    "status": "Passed",
+    "finishedAt": "2026-05-20T22:15:33.494Z"
+  },
+  {
+    "runId": "5f308b8b-b1f0-44c6-a3cd-b85df4479fcf",
+    "scenarioId": "editEntryTimeManagementAnnex",
+    "tool": "Postman",
+    "passed": 5,
+    "failed": 0,
+    "time": 1.5,
+    "status": "Passed",
+    "finishedAt": "2026-05-20T22:15:33.494Z"
+  },
+  {
+    "runId": "178a10b9-719f-4a59-8f73-ebf57dfc6f10",
+    "scenarioId": "editSubmitEntryTimeOff",
+    "tool": "Cypress",
+    "passed": 12,
+    "failed": 0,
+    "time": 37.8,
+    "status": "Passed",
+    "finishedAt": "2026-05-20T22:17:59.811Z"
+  },
+  {
+    "runId": "178a10b9-719f-4a59-8f73-ebf57dfc6f10",
+    "scenarioId": "editSubmitEntryTimeOff",
+    "tool": "Postman",
+    "passed": 0,
+    "failed": 1,
+    "time": 0,
+    "status": "Failed",
+    "finishedAt": "2026-05-20T22:17:59.811Z"
+  },
+  {
+    "runId": "9e044800-92bb-40d6-bc2e-d9b744222b59",
+    "scenarioId": "submitEntryTimeManagementAnnex",
+    "tool": "Cypress",
+    "passed": 13,
+    "failed": 0,
+    "time": 79.2,
+    "status": "Passed",
+    "finishedAt": "2026-05-20T22:19:28.508Z"
+  },
+  {
+    "runId": "9e044800-92bb-40d6-bc2e-d9b744222b59",
+    "scenarioId": "submitEntryTimeManagementAnnex",
+    "tool": "Postman",
+    "passed": 14,
+    "failed": 0,
+    "time": 4.4,
+    "status": "Passed",
+    "finishedAt": "2026-05-20T22:19:28.508Z"
+  },
+  {
+    "runId": "fccc6f70-8dde-4577-8c98-fa545707add1",
+    "scenarioId": "submitEntryTimeManagementAnnex",
+    "tool": "Cypress",
+    "passed": 13,
+    "failed": 0,
+    "time": 90.9,
+    "status": "Passed",
+    "finishedAt": "2026-05-21T07:54:46.637Z"
+  },
+  {
+    "runId": "fccc6f70-8dde-4577-8c98-fa545707add1",
+    "scenarioId": "submitEntryTimeManagementAnnex",
+    "tool": "Postman",
+    "passed": 14,
+    "failed": 0,
+    "time": 4.5,
+    "status": "Passed",
+    "finishedAt": "2026-05-21T07:54:46.637Z"
+  },
+  {
+    "runId": "7ed42f86-44fd-4280-a20d-9d558fb682d2",
+    "scenarioId": "timePageTimeEntryTeamTabApprovePhase",
+    "tool": "Cypress",
+    "passed": 7,
+    "failed": 0,
+    "time": 43.3,
+    "status": "Passed",
+    "finishedAt": "2026-05-21T07:55:51.919Z"
+  },
+  {
+    "runId": "7ed42f86-44fd-4280-a20d-9d558fb682d2",
+    "scenarioId": "timePageTimeEntryTeamTabApprovePhase",
+    "tool": "Postman",
+    "passed": 6,
+    "failed": 1,
+    "time": 2.1,
+    "status": "Failed",
+    "finishedAt": "2026-05-21T07:55:51.919Z"
+  },
+  {
+    "runId": "53169441-d52b-4feb-85fc-ad4352edebb2",
+    "scenarioId": "editEntryTimeManagementAnnex",
+    "tool": "Cypress",
+    "passed": 10,
+    "failed": 0,
+    "time": 70.4,
+    "status": "Passed",
+    "finishedAt": "2026-05-21T09:46:46.610Z"
+  },
+  {
+    "runId": "53169441-d52b-4feb-85fc-ad4352edebb2",
+    "scenarioId": "editEntryTimeManagementAnnex",
+    "tool": "Postman",
+    "passed": 5,
+    "failed": 0,
+    "time": 3,
+    "status": "Passed",
+    "finishedAt": "2026-05-21T09:46:46.610Z"
+  },
+  {
+    "runId": "66a18b28-fee4-4223-a000-8780ceedec50",
+    "scenarioId": "timePageTimeEntryTeamTabRefusePhase",
+    "tool": "Cypress",
+    "passed": 8,
+    "failed": 0,
+    "time": 51.7,
+    "status": "Passed",
+    "finishedAt": "2026-05-25T18:38:16.997Z"
+  },
+  {
+    "runId": "66a18b28-fee4-4223-a000-8780ceedec50",
+    "scenarioId": "timePageTimeEntryTeamTabRefusePhase",
+    "tool": "Postman",
+    "passed": 6,
+    "failed": 1,
+    "time": 2.9,
+    "status": "Failed",
+    "finishedAt": "2026-05-25T18:38:16.997Z"
+  },
+  {
+    "runId": "0201efea-d8cb-4200-86e0-8c2cab82537d",
+    "scenarioId": "timePageTimeEntryTeamTabRefusePhase",
+    "tool": "Cypress",
+    "passed": 8,
+    "failed": 0,
+    "time": 50.3,
+    "status": "Passed",
+    "finishedAt": "2026-05-25T19:39:16.165Z"
+  },
+  {
+    "runId": "0201efea-d8cb-4200-86e0-8c2cab82537d",
+    "scenarioId": "timePageTimeEntryTeamTabRefusePhase",
+    "tool": "Selenium",
+    "passed": 0,
+    "failed": 1,
+    "time": 0,
+    "status": "Failed",
+    "finishedAt": "2026-05-25T19:39:16.165Z"
+  },
+  {
+    "runId": "0201efea-d8cb-4200-86e0-8c2cab82537d",
+    "scenarioId": "timePageTimeEntryTeamTabRefusePhase",
+    "tool": "Postman",
+    "passed": 6,
+    "failed": 1,
+    "time": 2.9,
+    "status": "Failed",
+    "finishedAt": "2026-05-25T19:39:16.165Z"
+  },
+  {
+    "runId": "155f0972-6820-4ec8-acc7-5d23a1336772",
+    "scenarioId": "editEntryTimeManagementPhase",
+    "tool": "Cypress",
+    "passed": 10,
+    "failed": 0,
+    "time": 66.6,
+    "status": "Passed",
+    "finishedAt": "2026-05-25T20:01:41.276Z"
+  },
+  {
+    "runId": "155f0972-6820-4ec8-acc7-5d23a1336772",
+    "scenarioId": "editEntryTimeManagementPhase",
+    "tool": "Selenium",
+    "passed": 3,
+    "failed": 7,
+    "time": 2.3,
+    "status": "Failed",
+    "finishedAt": "2026-05-25T20:01:41.276Z"
+  },
+  {
+    "runId": "155f0972-6820-4ec8-acc7-5d23a1336772",
+    "scenarioId": "editEntryTimeManagementPhase",
+    "tool": "Postman",
+    "passed": 5,
+    "failed": 0,
+    "time": 2.4,
+    "status": "Passed",
+    "finishedAt": "2026-05-25T20:01:41.276Z"
+  },
+  {
+    "runId": "856210d6-fc48-4a27-b36a-1f52252942e9",
+    "scenarioId": "timePageTimeEntryTeamTabRefuseAnnex",
+    "tool": "Cypress",
+    "passed": 8,
+    "failed": 0,
+    "time": 43.9,
+    "status": "Passed",
+    "finishedAt": "2026-05-25T20:50:23.414Z"
+  },
+  {
+    "runId": "856210d6-fc48-4a27-b36a-1f52252942e9",
+    "scenarioId": "timePageTimeEntryTeamTabRefuseAnnex",
+    "tool": "Selenium",
+    "passed": 2,
+    "failed": 6,
+    "time": 13.4,
+    "status": "Failed",
+    "finishedAt": "2026-05-25T20:50:23.414Z"
+  },
+  {
+    "runId": "856210d6-fc48-4a27-b36a-1f52252942e9",
+    "scenarioId": "timePageTimeEntryTeamTabRefuseAnnex",
+    "tool": "Postman",
+    "passed": 6,
+    "failed": 1,
+    "time": 2.9,
+    "status": "Failed",
+    "finishedAt": "2026-05-25T20:50:23.414Z"
+  },
+  {
+    "runId": "6e6126bf-09a5-4c63-b3ba-5d2ec7655e2e",
+    "scenarioId": "timePageTimeEntryTeamTabRefusePhase",
+    "tool": "Cypress",
+    "passed": 8,
+    "failed": 0,
+    "time": 44.3,
+    "status": "Passed",
+    "finishedAt": "2026-05-25T21:47:14.570Z"
+  },
+  {
+    "runId": "6e6126bf-09a5-4c63-b3ba-5d2ec7655e2e",
+    "scenarioId": "timePageTimeEntryTeamTabRefusePhase",
+    "tool": "Selenium",
+    "passed": 0,
+    "failed": 1,
+    "time": 10,
+    "status": "Failed",
+    "finishedAt": "2026-05-25T21:47:14.570Z"
+  },
+  {
+    "runId": "6e6126bf-09a5-4c63-b3ba-5d2ec7655e2e",
+    "scenarioId": "timePageTimeEntryTeamTabRefusePhase",
+    "tool": "Postman",
+    "passed": 6,
+    "failed": 1,
+    "time": 2.7,
+    "status": "Failed",
+    "finishedAt": "2026-05-25T21:47:14.570Z"
+  },
+  {
+    "runId": "4ab91488-9b40-44e5-9367-bc153cfc48c4",
+    "scenarioId": "editEntryTimeManagementAnnex",
+    "tool": "Cypress",
+    "passed": 10,
+    "failed": 0,
+    "time": 64.5,
+    "status": "Passed",
+    "finishedAt": "2026-05-25T22:28:08.316Z"
+  },
+  {
+    "runId": "4ab91488-9b40-44e5-9367-bc153cfc48c4",
+    "scenarioId": "editEntryTimeManagementAnnex",
+    "tool": "Selenium",
+    "passed": 10,
+    "failed": 0,
+    "time": 2.2,
+    "status": "Passed",
+    "finishedAt": "2026-05-25T22:28:08.316Z"
+  },
+  {
+    "runId": "4ab91488-9b40-44e5-9367-bc153cfc48c4",
+    "scenarioId": "editEntryTimeManagementAnnex",
+    "tool": "Postman",
+    "passed": 5,
+    "failed": 0,
+    "time": 2.3,
+    "status": "Passed",
+    "finishedAt": "2026-05-25T22:28:08.316Z"
+  },
+  {
+    "runId": "dd970342-3a45-4621-8970-2348a68b8025",
+    "scenarioId": "timePageTimeEntryTeamTabRefuseAnnex",
+    "tool": "Cypress",
+    "passed": 8,
+    "failed": 0,
+    "time": 43.9,
+    "status": "Passed",
+    "finishedAt": "2026-05-25T22:38:36.797Z"
+  },
+  {
+    "runId": "dd970342-3a45-4621-8970-2348a68b8025",
+    "scenarioId": "timePageTimeEntryTeamTabRefuseAnnex",
+    "tool": "Selenium",
+    "passed": 4,
+    "failed": 4,
+    "time": 11,
+    "status": "Failed",
+    "finishedAt": "2026-05-25T22:38:36.797Z"
+  },
+  {
+    "runId": "dd970342-3a45-4621-8970-2348a68b8025",
+    "scenarioId": "timePageTimeEntryTeamTabRefuseAnnex",
+    "tool": "Postman",
+    "passed": 6,
+    "failed": 1,
+    "time": 2.8,
+    "status": "Failed",
+    "finishedAt": "2026-05-25T22:38:36.797Z"
+  },
+  {
+    "runId": "d001dc57-24a1-4d1b-bb81-3e54a43f67ba",
+    "scenarioId": "timePageTimeEntryTeamTabRefuseAnnex",
+    "tool": "Cypress",
+    "passed": 8,
+    "failed": 0,
+    "time": 43,
+    "status": "Passed",
+    "finishedAt": "2026-05-25T23:15:20.630Z"
+  },
+  {
+    "runId": "d001dc57-24a1-4d1b-bb81-3e54a43f67ba",
+    "scenarioId": "timePageTimeEntryTeamTabRefuseAnnex",
+    "tool": "Selenium",
+    "passed": 8,
+    "failed": 0,
+    "time": 11,
+    "status": "Passed",
+    "finishedAt": "2026-05-25T23:15:20.630Z"
+  },
+  {
+    "runId": "d001dc57-24a1-4d1b-bb81-3e54a43f67ba",
+    "scenarioId": "timePageTimeEntryTeamTabRefuseAnnex",
+    "tool": "Postman",
+    "passed": 7,
+    "failed": 0,
+    "time": 2.8,
+    "status": "Passed",
+    "finishedAt": "2026-05-25T23:15:20.630Z"
+  },
+  {
+    "runId": "2c446714-d566-433a-8f3d-b972577485da",
+    "scenarioId": "timePageTimeEntryTeamTabApprovePhase",
+    "tool": "Cypress",
+    "passed": 7,
+    "failed": 0,
+    "time": 46.2,
+    "status": "Passed",
+    "finishedAt": "2026-05-25T23:29:09.112Z"
+  },
+  {
+    "runId": "2c446714-d566-433a-8f3d-b972577485da",
+    "scenarioId": "timePageTimeEntryTeamTabApprovePhase",
+    "tool": "Selenium",
+    "passed": 7,
+    "failed": 0,
+    "time": 13.2,
+    "status": "Passed",
+    "finishedAt": "2026-05-25T23:29:09.112Z"
+  },
+  {
+    "runId": "2c446714-d566-433a-8f3d-b972577485da",
+    "scenarioId": "timePageTimeEntryTeamTabApprovePhase",
+    "tool": "Postman",
+    "passed": 7,
+    "failed": 0,
+    "time": 2.8,
+    "status": "Passed",
+    "finishedAt": "2026-05-25T23:29:09.112Z"
+  },
+  {
+    "runId": "e5ebe116-1693-4426-90ac-c6f622cf214b",
+    "scenarioId": "editEntryTimeManagementAnnex",
+    "tool": "Cypress",
+    "passed": 10,
+    "failed": 0,
+    "time": 64.9,
+    "status": "Passed",
+    "finishedAt": "2026-05-25T23:50:29.725Z"
+  },
+  {
+    "runId": "e5ebe116-1693-4426-90ac-c6f622cf214b",
+    "scenarioId": "editEntryTimeManagementAnnex",
+    "tool": "Selenium",
+    "passed": 10,
+    "failed": 0,
+    "time": 2.2,
+    "status": "Passed",
+    "finishedAt": "2026-05-25T23:50:29.725Z"
+  },
+  {
+    "runId": "e5ebe116-1693-4426-90ac-c6f622cf214b",
+    "scenarioId": "editEntryTimeManagementAnnex",
+    "tool": "Postman",
+    "passed": 5,
+    "failed": 0,
+    "time": 2.3,
+    "status": "Passed",
+    "finishedAt": "2026-05-25T23:50:29.725Z"
+  },
+  {
+    "runId": "7c95a83a-a5fa-47f2-83e3-8f3fdecb0949",
+    "scenarioId": "editEntryTimeManagementPhase",
+    "tool": "Cypress",
+    "passed": 10,
+    "failed": 0,
+    "time": 68.1,
+    "status": "Passed",
+    "finishedAt": "2026-05-26T07:25:59.724Z"
+  },
+  {
+    "runId": "7c95a83a-a5fa-47f2-83e3-8f3fdecb0949",
+    "scenarioId": "editEntryTimeManagementPhase",
+    "tool": "Selenium",
+    "passed": 10,
+    "failed": 0,
+    "time": 1,
+    "status": "Passed",
+    "finishedAt": "2026-05-26T07:25:59.724Z"
+  },
+  {
+    "runId": "7c95a83a-a5fa-47f2-83e3-8f3fdecb0949",
+    "scenarioId": "editEntryTimeManagementPhase",
+    "tool": "Postman",
+    "passed": 5,
+    "failed": 0,
+    "time": 1.9,
+    "status": "Passed",
+    "finishedAt": "2026-05-26T07:25:59.724Z"
+  },
+  {
+    "runId": "a47232d2-133a-46b8-b5d8-eb7db7b63fdb",
+    "scenarioId": "timePageTimeEntryTeamTabRefusePhase",
+    "tool": "Cypress",
+    "passed": 8,
+    "failed": 0,
+    "time": 45.8,
+    "status": "Passed",
+    "finishedAt": "2026-05-26T07:35:21.348Z"
+  },
+  {
+    "runId": "a47232d2-133a-46b8-b5d8-eb7db7b63fdb",
+    "scenarioId": "timePageTimeEntryTeamTabRefusePhase",
+    "tool": "Selenium",
+    "passed": 0,
+    "failed": 1,
+    "time": 9,
+    "status": "Failed",
+    "finishedAt": "2026-05-26T07:35:21.348Z"
+  },
+  {
+    "runId": "a47232d2-133a-46b8-b5d8-eb7db7b63fdb",
+    "scenarioId": "timePageTimeEntryTeamTabRefusePhase",
+    "tool": "Postman",
+    "passed": 7,
+    "failed": 0,
+    "time": 3.6,
+    "status": "Passed",
+    "finishedAt": "2026-05-26T07:35:21.348Z"
+  },
+  {
+    "runId": "0740d245-7fc2-44b0-b0a8-76b7299cacaf",
+    "scenarioId": "editEntryTimeManagementAnnex",
+    "tool": "Cypress",
+    "passed": 10,
+    "failed": 0,
+    "time": 66.7,
+    "status": "Passed",
+    "finishedAt": "2026-05-26T08:53:01.482Z"
+  },
+  {
+    "runId": "0740d245-7fc2-44b0-b0a8-76b7299cacaf",
+    "scenarioId": "editEntryTimeManagementAnnex",
+    "tool": "Selenium",
+    "passed": 10,
+    "failed": 0,
+    "time": 60,
+    "status": "Passed",
+    "finishedAt": "2026-05-26T08:53:01.482Z"
+  },
+  {
+    "runId": "0740d245-7fc2-44b0-b0a8-76b7299cacaf",
+    "scenarioId": "editEntryTimeManagementAnnex",
+    "tool": "Postman",
+    "passed": 5,
+    "failed": 0,
+    "time": 2,
+    "status": "Passed",
+    "finishedAt": "2026-05-26T08:53:01.482Z"
+  },
+  {
+    "runId": "df740156-c902-45fd-abeb-5d65a6579e5b",
+    "scenarioId": "editEntryTimeManagementPhase",
+    "tool": "Cypress",
+    "passed": 10,
+    "failed": 0,
+    "time": 62.9,
+    "status": "Passed",
+    "finishedAt": "2026-05-26T08:55:41.553Z"
+  },
+  {
+    "runId": "df740156-c902-45fd-abeb-5d65a6579e5b",
+    "scenarioId": "editEntryTimeManagementPhase",
+    "tool": "Selenium",
+    "passed": 10,
+    "failed": 0,
+    "time": 60,
+    "status": "Passed",
+    "finishedAt": "2026-05-26T08:55:41.553Z"
+  },
+  {
+    "runId": "df740156-c902-45fd-abeb-5d65a6579e5b",
+    "scenarioId": "editEntryTimeManagementPhase",
+    "tool": "Postman",
+    "passed": 5,
+    "failed": 0,
+    "time": 1.8,
+    "status": "Passed",
+    "finishedAt": "2026-05-26T08:55:41.553Z"
+  },
+  {
+    "runId": "6c6ebe4e-b03f-4b04-b1a4-84f5e2850b1f",
+    "scenarioId": "editSubmitEntryTimeOff",
+    "tool": "Cypress",
+    "passed": 12,
+    "failed": 0,
+    "time": 38.1,
+    "status": "Passed",
+    "finishedAt": "2026-05-26T08:59:06.587Z"
+  },
+  {
+    "runId": "6c6ebe4e-b03f-4b04-b1a4-84f5e2850b1f",
+    "scenarioId": "editSubmitEntryTimeOff",
+    "tool": "Selenium",
+    "passed": 5,
+    "failed": 7,
+    "time": 120,
+    "status": "Failed",
+    "finishedAt": "2026-05-26T08:59:06.587Z"
+  },
+  {
+    "runId": "6c6ebe4e-b03f-4b04-b1a4-84f5e2850b1f",
+    "scenarioId": "editSubmitEntryTimeOff",
+    "tool": "Postman",
+    "passed": 0,
+    "failed": 1,
+    "time": 0,
+    "status": "Failed",
+    "finishedAt": "2026-05-26T08:59:06.587Z"
+  },
+  {
+    "runId": "33178d6f-8517-4efc-8bf4-598a45563167",
+    "scenarioId": "editEntryTimeManagementAnnex",
+    "tool": "Cypress",
+    "passed": 10,
+    "failed": 0,
+    "time": 66.4,
+    "status": "Passed",
+    "finishedAt": "2026-05-26T09:13:06.859Z"
+  },
+  {
+    "runId": "33178d6f-8517-4efc-8bf4-598a45563167",
+    "scenarioId": "editEntryTimeManagementAnnex",
+    "tool": "Selenium",
+    "passed": 10,
+    "failed": 0,
+    "time": 60,
+    "status": "Passed",
+    "finishedAt": "2026-05-26T09:13:06.859Z"
+  },
+  {
+    "runId": "33178d6f-8517-4efc-8bf4-598a45563167",
+    "scenarioId": "editEntryTimeManagementAnnex",
+    "tool": "Postman",
+    "passed": 5,
+    "failed": 0,
+    "time": 1.7,
+    "status": "Passed",
+    "finishedAt": "2026-05-26T09:13:06.859Z"
+  },
+  {
+    "runId": "b916298a-caa1-4b07-8d74-87a8b236b724",
+    "scenarioId": "editSubmitEntryTimeOff",
+    "tool": "Cypress",
+    "passed": 12,
+    "failed": 0,
+    "time": 45,
+    "status": "Passed",
+    "finishedAt": "2026-05-26T11:11:30.072Z"
+  },
+  {
+    "runId": "b916298a-caa1-4b07-8d74-87a8b236b724",
+    "scenarioId": "editSubmitEntryTimeOff",
+    "tool": "Selenium",
+    "passed": 5,
+    "failed": 7,
+    "time": 120,
+    "status": "Failed",
+    "finishedAt": "2026-05-26T11:11:30.072Z"
+  },
+  {
+    "runId": "b916298a-caa1-4b07-8d74-87a8b236b724",
+    "scenarioId": "editSubmitEntryTimeOff",
+    "tool": "Postman",
+    "passed": 0,
+    "failed": 1,
+    "time": 0,
+    "status": "Failed",
+    "finishedAt": "2026-05-26T11:11:30.072Z"
+  },
+  {
+    "runId": "3c253f59-228c-4ad6-b034-8221145036b5",
+    "scenarioId": "editEntryTimeManagementPhase",
+    "tool": "Cypress",
+    "passed": 10,
+    "failed": 0,
+    "time": 67.1,
+    "status": "Passed",
+    "finishedAt": "2026-05-26T16:31:39.239Z"
+  },
+  {
+    "runId": "3c253f59-228c-4ad6-b034-8221145036b5",
+    "scenarioId": "editEntryTimeManagementPhase",
+    "tool": "Selenium",
+    "passed": 10,
+    "failed": 0,
+    "time": 60,
+    "status": "Passed",
+    "finishedAt": "2026-05-26T16:31:39.239Z"
+  },
+  {
+    "runId": "3c253f59-228c-4ad6-b034-8221145036b5",
+    "scenarioId": "editEntryTimeManagementPhase",
+    "tool": "Postman",
+    "passed": 5,
+    "failed": 0,
+    "time": 1.6,
+    "status": "Passed",
+    "finishedAt": "2026-05-26T16:31:39.239Z"
+  },
+  {
+    "runId": "59b6187e-850b-4f2a-94cc-6fac12cd025b",
+    "scenarioId": "editEntryTimeManagementAnnex",
+    "tool": "Cypress",
+    "passed": 10,
+    "failed": 0,
+    "time": 77.4,
+    "status": "Passed",
+    "finishedAt": "2026-05-27T17:10:55.032Z"
+  },
+  {
+    "runId": "59b6187e-850b-4f2a-94cc-6fac12cd025b",
+    "scenarioId": "editEntryTimeManagementAnnex",
+    "tool": "Selenium",
+    "passed": 10,
+    "failed": 0,
+    "time": 60,
+    "status": "Passed",
+    "finishedAt": "2026-05-27T17:10:55.032Z"
+  },
+  {
+    "runId": "59b6187e-850b-4f2a-94cc-6fac12cd025b",
+    "scenarioId": "editEntryTimeManagementAnnex",
+    "tool": "Postman",
+    "passed": 5,
+    "failed": 0,
+    "time": 1.8,
+    "status": "Passed",
+    "finishedAt": "2026-05-27T17:10:55.032Z"
+  },
+  {
+    "runId": "f9731898-0a30-4fed-a69e-c1a7477b2629",
+    "scenarioId": "submitEntryTimeManagementPhase",
+    "tool": "Cypress",
+    "passed": 13,
+    "failed": 0,
+    "time": 88.3,
+    "status": "Passed",
+    "finishedAt": "2026-05-27T17:52:39.450Z"
+  },
+  {
+    "runId": "f9731898-0a30-4fed-a69e-c1a7477b2629",
+    "scenarioId": "submitEntryTimeManagementPhase",
+    "tool": "Selenium",
+    "passed": 5,
+    "failed": 8,
+    "time": 120,
+    "status": "Failed",
+    "finishedAt": "2026-05-27T17:52:39.450Z"
+  },
+  {
+    "runId": "f9731898-0a30-4fed-a69e-c1a7477b2629",
+    "scenarioId": "submitEntryTimeManagementPhase",
+    "tool": "Postman",
+    "passed": 14,
+    "failed": 0,
+    "time": 5,
+    "status": "Passed",
+    "finishedAt": "2026-05-27T17:52:39.450Z"
+  },
+  {
+    "runId": "6742076c-10fc-4977-806f-973ff3151467",
+    "scenarioId": "timePageTimeEntryTeamTabRefusePhase",
+    "tool": "Cypress",
+    "passed": 8,
+    "failed": 0,
+    "time": 44.3,
+    "status": "Passed",
+    "finishedAt": "2026-05-27T17:56:29.549Z"
+  },
+  {
+    "runId": "6742076c-10fc-4977-806f-973ff3151467",
+    "scenarioId": "timePageTimeEntryTeamTabRefusePhase",
+    "tool": "Selenium",
+    "passed": 0,
+    "failed": 1,
+    "time": 10,
+    "status": "Failed",
+    "finishedAt": "2026-05-27T17:56:29.549Z"
+  },
+  {
+    "runId": "6742076c-10fc-4977-806f-973ff3151467",
+    "scenarioId": "timePageTimeEntryTeamTabRefusePhase",
+    "tool": "Postman",
+    "passed": 7,
+    "failed": 0,
+    "time": 2.1,
+    "status": "Passed",
+    "finishedAt": "2026-05-27T17:56:29.549Z"
+  },
+  {
+    "runId": "d528a1ca-77db-4486-87d3-20e5f264bcd8",
+    "scenarioId": "timePageTimeEntryTeamTabRefuseAnnex",
+    "tool": "Cypress",
+    "passed": 8,
+    "failed": 0,
+    "time": 43.5,
+    "status": "Passed",
+    "finishedAt": "2026-05-27T17:56:57.754Z"
+  },
+  {
+    "runId": "d528a1ca-77db-4486-87d3-20e5f264bcd8",
+    "scenarioId": "timePageTimeEntryTeamTabRefuseAnnex",
+    "tool": "Selenium",
+    "passed": 8,
+    "failed": 0,
+    "time": 45,
+    "status": "Passed",
+    "finishedAt": "2026-05-27T17:56:57.754Z"
+  },
+  {
+    "runId": "d528a1ca-77db-4486-87d3-20e5f264bcd8",
+    "scenarioId": "timePageTimeEntryTeamTabRefuseAnnex",
+    "tool": "Postman",
+    "passed": 7,
+    "failed": 0,
+    "time": 2.3,
+    "status": "Passed",
+    "finishedAt": "2026-05-27T17:56:57.754Z"
+  },
+  {
+    "runId": "c67cf1b7-b67c-42be-8cfb-af594de9ded4",
+    "scenarioId": "editEntryTimeManagementAnnex",
+    "tool": "Cypress",
+    "passed": 10,
+    "failed": 0,
+    "time": 65.3,
+    "status": "Passed",
+    "finishedAt": "2026-05-27T18:08:56.598Z"
+  },
+  {
+    "runId": "c67cf1b7-b67c-42be-8cfb-af594de9ded4",
+    "scenarioId": "editEntryTimeManagementAnnex",
+    "tool": "Selenium",
+    "passed": 10,
+    "failed": 0,
+    "time": 60,
+    "status": "Passed",
+    "finishedAt": "2026-05-27T18:08:56.598Z"
+  },
+  {
+    "runId": "c67cf1b7-b67c-42be-8cfb-af594de9ded4",
+    "scenarioId": "editEntryTimeManagementAnnex",
+    "tool": "Postman",
+    "passed": 5,
+    "failed": 0,
+    "time": 2,
+    "status": "Passed",
+    "finishedAt": "2026-05-27T18:08:56.598Z"
   }
 ]

@@ -4,8 +4,8 @@ const API_ENDPOINTS = {
   testHistory: "/api/test-history",
 };
 
-const testingTools = ["Cypress", "Postman"];
-const scenarioStatusTools = ["Cypress", "Postman", "Selenium"];
+const testingTools = ["Cypress", "Selenium", "Postman"];
+const scenarioStatusTools = testingTools;
 
 const scenarios = [
   {
@@ -66,7 +66,6 @@ const elements = {
   scenarioList: document.querySelector("#scenarioList"),
   selectedScenarioName: document.querySelector("#selectedScenarioName"),
   environmentStrip: document.querySelector("#environmentStrip"),
-  executionBadge: document.querySelector("#executionBadge"),
   progressLabel: document.querySelector("#progressLabel"),
   progressValue: document.querySelector("#progressValue"),
   progressBar: document.querySelector("#progressBar"),
@@ -78,8 +77,6 @@ const elements = {
   lastRunStatus: document.querySelector("#lastRunStatus"),
   bestToolStat: document.querySelector("#bestToolStat"),
   avgTimeStat: document.querySelector("#avgTimeStat"),
-  heroBestTool: document.querySelector("#heroBestTool"),
-  heroAvgTime: document.querySelector("#heroAvgTime"),
   scrollTopButton: document.querySelector("#scrollTopButton"),
 };
 
@@ -95,11 +92,11 @@ function futureApiClient() {
   }
 
   return {
-    runTest: async (scenarioId) => {
+    runTest: async (scenarioId, tool = null) => {
       const payload = await requestJson(API_ENDPOINTS.runTest, {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ scenarioId }),
+        body: JSON.stringify({ scenarioId, tool }),
       });
       return payload.runId;
     },
@@ -117,8 +114,8 @@ const apiClient = futureApiClient();
 function createInitialToolStatuses() {
   return {
     Cypress: "Not Started",
+    Selenium: "Not Started",
     Postman: "Not Started",
-    Selenium: "Not Integrated",
   };
 }
 
@@ -137,7 +134,7 @@ function renderScenarios() {
               ${scenarioStatusTools
                 .map((tool) => {
                   const status = statuses[tool] ?? "Not Started";
-                  return `<span class="scenario-status ${statusClass(status)}">${tool} ${status}</span>`;
+                  return `<span class="scenario-status ${statusClass(status)}"><span class="scenario-tool-name">${tool}</span><span class="scenario-tool-state">${status}</span></span>`;
                 })
                 .join("")}
             </div>
@@ -151,11 +148,18 @@ function renderScenarios() {
     .join("");
 }
 
-function renderEnvironmentStrip(activeTool = null, completedTools = []) {
+function renderEnvironmentStrip(activeTool = null, completedTools = [], selectedTools = testingTools) {
   elements.environmentStrip.innerHTML = testingTools
     .map((tool) => {
+      const isSelected = selectedTools.includes(tool);
       const isActive = activeTool === tool;
-      const status = completedTools.includes(tool) ? "Completed" : isActive ? "Running" : "Queued";
+      const status = completedTools.includes(tool)
+        ? "Completed"
+        : isActive
+          ? "Running"
+          : isSelected
+            ? "Queued"
+            : "Not Started";
       const statusClassName = statusClass(status);
       return `
         <div class="environment-pill ${isActive ? "active" : ""} ${statusClassName}">
@@ -174,11 +178,6 @@ function statusClass(status) {
   return status.toLowerCase().replaceAll(" ", "-");
 }
 
-function setExecutionStatus(status) {
-  elements.executionBadge.textContent = status;
-  elements.executionBadge.className = `status-badge ${statusClass(status)}`;
-}
-
 function setProgress(percent, label) {
   elements.progressBar.style.width = `${percent}%`;
   elements.progressBar.classList.toggle("completed", percent >= 100);
@@ -189,9 +188,12 @@ function setProgress(percent, label) {
 function updateScenarioToolStatusesFromProgress(scenarioId, progress) {
   const completedTools = progress.completedTools ?? [];
   const activeTool = progress.activeTool;
-  const statuses = createInitialToolStatuses();
+  const selectedTools = progress.selectedTools ?? testingTools;
+  const statuses = {
+    ...(state.scenarioToolStatuses[scenarioId] ?? createInitialToolStatuses()),
+  };
 
-  for (const tool of testingTools) {
+  for (const tool of selectedTools) {
     if (completedTools.includes(tool)) {
       statuses[tool] = "Completed";
     } else if (activeTool === tool) {
@@ -201,18 +203,18 @@ function updateScenarioToolStatusesFromProgress(scenarioId, progress) {
     }
   }
 
-  statuses.Selenium = "Not Integrated";
   state.scenarioToolStatuses[scenarioId] = statuses;
 }
 
 function updateScenarioToolStatusesFromResults(scenarioId, results) {
-  const statuses = createInitialToolStatuses();
+  const statuses = {
+    ...(state.scenarioToolStatuses[scenarioId] ?? createInitialToolStatuses()),
+  };
 
   for (const result of results) {
     statuses[result.tool] = result.status;
   }
 
-  statuses.Selenium = "Not Integrated";
   state.scenarioToolStatuses[scenarioId] = statuses;
 }
 
@@ -233,46 +235,46 @@ function sleep(ms) {
   return new Promise((resolve) => window.setTimeout(resolve, ms));
 }
 
-async function runScenario(scenarioId) {
+async function runScenario(scenarioId, tool) {
   if (state.isRunning) return;
 
   const scenario = scenarios.find((item) => item.id === scenarioId);
   state.selectedScenarioId = scenarioId;
   state.isRunning = true;
-  state.scenarioToolStatuses[scenarioId] = {
-    Cypress: "Running",
-    Postman: "Queued",
-    Selenium: "Not Integrated",
+  const selectedTools = tool ? [tool] : testingTools;
+  const scenarioStatuses = {
+    ...(state.scenarioToolStatuses[scenarioId] ?? createInitialToolStatuses()),
   };
+  for (const selectedTool of selectedTools) {
+    scenarioStatuses[selectedTool] = selectedTool === selectedTools[0] ? "Running" : "Queued";
+  }
+  state.scenarioToolStatuses[scenarioId] = scenarioStatuses;
   state.currentResults = null;
 
   document.querySelector("#execution")?.scrollIntoView({ behavior: "smooth", block: "start" });
   renderScenarios();
   clearLogs();
-  renderEnvironmentStrip("Cypress", [], 0);
+  renderEnvironmentStrip(selectedTools[0] ?? null, [], selectedTools);
   renderEmptyResults();
-  setExecutionStatus("Running");
   setProgress(0, "Preparing shared test scenario");
-  elements.selectedScenarioName.textContent = scenario.name;
+  elements.selectedScenarioName.textContent = tool ? `${scenario.name} • ${tool}` : scenario.name;
   elements.recommendationCard.hidden = true;
   elements.lastRunStatus.textContent = "Running";
   elements.bestToolStat.textContent = "Pending";
   elements.avgTimeStat.textContent = "--";
 
   appendLog("Runner", `Scenario selected: ${scenario.name}`);
-  appendLog("Runner", "Initializing real Cypress and Postman execution workflow.");
+  appendLog("Runner", `Initializing real ${tool ?? "Cypress, Selenium, and Postman"} execution workflow.`);
 
   let runId;
   try {
-    runId = await apiClient.runTest(scenarioId);
+    runId = await apiClient.runTest(scenarioId, tool ?? null);
   } catch (err) {
     state.isRunning = false;
     state.scenarioToolStatuses[scenarioId] = {
-      Cypress: "Failed",
-      Postman: "Queued",
-      Selenium: "Not Integrated",
+      ...(state.scenarioToolStatuses[scenarioId] ?? createInitialToolStatuses()),
+      [tool || "Cypress"]: "Failed",
     };
-    setExecutionStatus("Failed");
     setProgress(0, "Failed to start execution");
     appendLog("Runner", `Failed to start: ${err?.message ?? String(err)}`);
     renderScenarios();
@@ -291,9 +293,8 @@ async function runScenario(scenarioId) {
     }
 
     const progress = snapshot.progress ?? { percent: 0, label: "Waiting", activeTool: null, completedTools: [] };
-    renderEnvironmentStrip(progress.activeTool, progress.completedTools ?? []);
+    renderEnvironmentStrip(progress.activeTool, progress.completedTools ?? [], progress.selectedTools ?? selectedTools);
     setProgress(progress.percent ?? 0, progress.label ?? "Running");
-    setExecutionStatus(snapshot.status ?? "Running");
     elements.lastRunStatus.textContent = snapshot.status ?? "Running";
     updateScenarioToolStatusesFromProgress(scenarioId, progress);
     renderScenarios();
@@ -325,7 +326,7 @@ async function runScenario(scenarioId) {
 function renderEmptyResults() {
   elements.resultsTableBody.innerHTML = `
     <tr>
-      <td colspan="6" class="empty-table">Execution in progress. Results will appear after all environments finish.</td>
+      <td colspan="6" class="empty-table">Execution in progress. Results will appear after the selected script finishes.</td>
     </tr>
   `;
 }
@@ -344,8 +345,8 @@ function renderResults(results) {
           <td>${result.passed}</td>
           <td>${result.failed}</td>
           <td>${result.time.toFixed(1)}s</td>
-          <td>${result.stability}%</td>
-          <td><span class="final-status ${result.status.toLowerCase()}">${result.status}</span></td>
+          <td>${result.stability == null ? "--" : `${result.stability}%`}</td>
+          <td><span class="final-status ${statusClass(result.status)}">${result.status}</span></td>
         </tr>
       `
     )
@@ -353,42 +354,49 @@ function renderResults(results) {
 }
 
 function renderRecommendation(results, scenarioName) {
-  const best = getBestTool(results);
-  const fastest = [...results].sort((a, b) => a.time - b.time)[0];
-  const mostStable = [...results].sort((a, b) => b.stability - a.stability)[0];
-  const passedTieCount = results.filter((result) => result.passed === best.passed).length;
+  const comparable = results.filter((result) => result.status !== "Not Implemented");
+  if (!comparable.length) {
+    elements.recommendationCard.hidden = true;
+    return;
+  }
+
+  const best = getBestTool(comparable);
+  const fastest = [...comparable].sort((a, b) => a.time - b.time)[0];
+  const mostStable = [...comparable].sort((a, b) => (b.stability ?? -1) - (a.stability ?? -1))[0];
+  const passedTieCount = comparable.filter((result) => result.passed === best.passed).length;
 
   elements.recommendationTitle.textContent = `${best.tool} is recommended for ${scenarioName}`;
   elements.recommendationText.textContent =
     `${best.tool} is recommended because it has the highest number of passed tests in this run (${best.passed}). ` +
-    `Passed tests are the primary recommendation rule. ` +
-    (passedTieCount > 1 ? `Because more than one tool had ${best.passed} passed tests, failed tests and execution time were used as tie-breakers. ` : "") +
-    `${fastest.tool} had the fastest execution time. ` +
-    `The highest stability score in this run was ${mostStable.stability}% from ${mostStable.tool}.`;
+    `Recommendation priority is passed tests first, then stability, then execution time. ` +
+    (passedTieCount > 1 ? `Because more than one tool had ${best.passed} passed tests, stability and execution time were used as tie-breakers. ` : "") +
+    `${mostStable.tool} had the strongest stability score in this run (${mostStable.stability ?? 0}%). ` +
+    `${fastest.tool} had the fastest execution time.`;
   elements.recommendationCard.hidden = false;
 }
 
 function getBestTool(results) {
   return [...results].sort((a, b) => {
     if (b.passed !== a.passed) return b.passed - a.passed;
-    if (a.failed !== b.failed) return a.failed - b.failed;
+    if ((b.stability ?? -1) !== (a.stability ?? -1)) return (b.stability ?? -1) - (a.stability ?? -1);
     return a.time - b.time;
   })[0];
 }
 
 function updateStats(results, status) {
-  const best = getBestTool(results);
-  const avgTime = results.reduce((total, result) => total + result.time, 0) / results.length;
+  const comparable = results.filter((result) => result.status !== "Not Implemented");
+  const best = comparable.length ? getBestTool(comparable) : null;
+  const avgTime = comparable.length
+    ? comparable.reduce((total, result) => total + result.time, 0) / comparable.length
+    : null;
 
   elements.lastRunStatus.textContent = status;
-  elements.bestToolStat.textContent = best.tool;
-  elements.avgTimeStat.textContent = `${avgTime.toFixed(1)}s`;
-  elements.heroBestTool.textContent = best.tool;
-  elements.heroAvgTime.textContent = `${avgTime.toFixed(1)}s`;
+  elements.bestToolStat.textContent = best ? best.tool : "Pending";
+  elements.avgTimeStat.textContent = avgTime == null ? "--" : `${avgTime.toFixed(1)}s`;
 }
 
 elements.scenarioList.addEventListener("click", (event) => {
-  const button = event.target.closest("[data-scenario-id]");
+  const button = event.target.closest("button[data-scenario-id]");
   if (!button) return;
   runScenario(button.dataset.scenarioId);
 });

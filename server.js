@@ -9,6 +9,8 @@ const ROOT_DIR = __dirname;
 const DATA_DIR = path.join(ROOT_DIR, "data");
 const HISTORY_PATH = path.join(DATA_DIR, "test-history.json");
 const CYPRESS_SPEC_DIR = "cypress/e2e";
+const SELENIUM_ROOT_DIR = path.join(ROOT_DIR, "selenium");
+const SELENIUM_SPEC_DIR = "selenium/e2e";
 const POSTMAN_COLLECTION_PATH = "postman/collections/Licenta.postman_collection.json";
 const POSTMAN_ENVIRONMENT_PATH = "postman/environments/Licenta.postman_environment.json";
 const POSTMAN_ENVIRONMENT_VALUES_PATH = "postman/environments/Licenta_values.postman_environment.json";
@@ -17,7 +19,7 @@ const NEWMAN_REPORT_DIR = path.join(DATA_DIR, "newman-reports");
 const PORT = Number.parseInt(process.env.PORT ?? "5173", 10);
 const HOST = process.env.HOST ?? "127.0.0.1";
 
-const testingTools = ["Cypress", "Postman"];
+const testingTools = ["Cypress", "Selenium", "Postman"];
 
 const postmanFolderByScenario = {
   editEntryTimeManagementAnnex: "editEntryTimeManagementAnnex",
@@ -108,6 +110,7 @@ function appendLog(run, tool, message) {
 function computeStability(history, scenarioId, tool) {
   const recent = history
     .filter((entry) => entry.scenarioId === scenarioId && entry.tool === tool)
+    .filter((entry) => entry.status !== "Not Implemented")
     .slice(-10);
   if (recent.length === 0) return null;
   const passed = recent.filter((entry) => entry.status === "Passed").length;
@@ -118,6 +121,7 @@ async function persistRunToHistory(run) {
   const history = await readJsonFile(HISTORY_PATH, []);
   const finishedAt = run.finishedAt ?? nowIso();
   for (const result of run.results ?? []) {
+    if (result.status === "Not Implemented") continue;
     history.push({
       runId: run.runId,
       scenarioId: run.scenarioId,
@@ -160,6 +164,16 @@ function toolCommand(tool, scenarioId, runId) {
       ],
       reportPath,
       environmentPath,
+    };
+  }
+
+  if (tool === "Selenium") {
+    return {
+      cmd: process.platform === "win32"
+        ? path.join(ROOT_DIR, "node_modules", ".bin", "mocha.cmd")
+        : path.join(ROOT_DIR, "node_modules", ".bin", "mocha"),
+      args: [`e2e/${scenarioId}.spec.js`, "--timeout", "180000"],
+      cwd: SELENIUM_ROOT_DIR,
     };
   }
 
@@ -222,13 +236,13 @@ async function toolReadiness(tool, scenarioId) {
     const hasBin = await pathExists(process.platform === "win32" ? "node_modules/.bin/cypress.cmd" : "node_modules/.bin/cypress");
     const hasSpec = await pathExists(`${CYPRESS_SPEC_DIR}/${scenarioId}.cy.js`);
     if (!hasBin) return { ok: false, reason: "Cypress is not installed. Run npm install before executing tests." };
-    if (!hasSpec) return { ok: false, reason: `Missing Cypress spec: ${CYPRESS_SPEC_DIR}/${scenarioId}.cy.js` };
+    if (!hasSpec) return { ok: false, reason: `Missing Cypress spec: ${CYPRESS_SPEC_DIR}/${scenarioId}.cy.js`, status: "Not Implemented" };
     return { ok: true, reason: "" };
   }
 
   if (tool === "Postman") {
     const folder = postmanFolderByScenario[scenarioId];
-    if (!folder) return { ok: false, reason: `No Postman folder mapped for ${scenarioId}.` };
+    if (!folder) return { ok: false, reason: `No Postman folder mapped for ${scenarioId}.`, status: "Not Implemented" };
 
     const hasBin = await pathExists(process.platform === "win32" ? "node_modules/.bin/newman.cmd" : "node_modules/.bin/newman");
     const hasCollection = await pathExists(POSTMAN_COLLECTION_PATH);
@@ -244,6 +258,16 @@ async function toolReadiness(tool, scenarioId) {
     return { ok: true, reason: "" };
   }
 
+  if (tool === "Selenium") {
+    const hasBin = await pathExists(process.platform === "win32" ? "node_modules/.bin/mocha.cmd" : "node_modules/.bin/mocha");
+    const hasSpec = await pathExists(`${SELENIUM_SPEC_DIR}/${scenarioId}.spec.js`);
+    const hasSupport = await pathExists("selenium/support/browser.js");
+    if (!hasBin) return { ok: false, reason: "Mocha is not installed. Run npm install before executing Selenium tests." };
+    if (!hasSpec) return { ok: false, reason: `Missing Selenium spec: ${SELENIUM_SPEC_DIR}/${scenarioId}.spec.js`, status: "Not Implemented" };
+    if (!hasSupport) return { ok: false, reason: "Missing Selenium support files under selenium/support." };
+    return { ok: true, reason: "" };
+  }
+
   return { ok: false, reason: `No real runner configured for ${tool}.` };
 }
 
@@ -255,6 +279,12 @@ function stripJsComments(source) {
 
 async function countCypressIts(scenarioId) {
   const specPath = path.join(ROOT_DIR, CYPRESS_SPEC_DIR, `${scenarioId}.cy.js`);
+  const source = await fsp.readFile(specPath, "utf8");
+  return [...stripJsComments(source).matchAll(/\bit(?:\.only|\.skip)?\s*\(/g)].length;
+}
+
+async function countSeleniumIts(scenarioId) {
+  const specPath = path.join(ROOT_DIR, SELENIUM_SPEC_DIR, `${scenarioId}.spec.js`);
   const source = await fsp.readFile(specPath, "utf8");
   return [...stripJsComments(source).matchAll(/\bit(?:\.only|\.skip)?\s*\(/g)].length;
 }
@@ -283,6 +313,32 @@ function resultFromCypressSpecOutput(stdout, fallbackDurationSec, exitCode) {
   };
 }
 
+function resultFromSeleniumSpecOutput(stdout, fallbackDurationSec, exitCode) {
+  const passed = countFromSpecOutput(stdout, "passing");
+  const failed = countFromSpecOutput(stdout, "failing");
+  const durationMatch = stdout.match(/(?:^|\n)\s*\d+\s+(?:passing|failing)\s+\((\d+(?:\.\d+)?)(ms|s|m)\)\s*$/im);
+  const duration = durationMatch
+    ? durationMatch[2] === "ms"
+      ? Number.parseFloat(durationMatch[1]) / 1000
+      : durationMatch[2] === "m"
+        ? Number.parseFloat(durationMatch[1]) * 60
+        : Number.parseFloat(durationMatch[1])
+    : fallbackDurationSec;
+
+  return {
+    tool: "Selenium",
+    passed,
+    failed: failed || (exitCode === 0 ? 0 : 1),
+    time: Number(duration.toFixed(1)),
+    stability: null,
+    status: failed === 0 && exitCode === 0 ? "Passed" : "Failed",
+  };
+}
+
+function outputForResult(tool, stdout, stderr) {
+  return tool === "Selenium" ? `${stdout}\n${stderr}` : stdout;
+}
+
 async function resultFromPostmanReport(reportPath, fallbackDurationSec, exitCode) {
   const report = await readJsonFile(reportPath, null);
   const assertions = report?.run?.stats?.assertions ?? {};
@@ -307,6 +363,16 @@ async function runToolReal(run, tool, scenarioId, progressStart, progressEnd) {
   const readiness = await toolReadiness(tool, scenarioId);
   if (!readiness.ok) {
     appendLog(run, tool, readiness.reason);
+    if (readiness.status === "Not Implemented") {
+      return {
+        tool,
+        passed: 0,
+        failed: 0,
+        time: 0,
+        stability: null,
+        status: "Not Implemented",
+      };
+    }
     return {
       tool,
       passed: 0,
@@ -329,22 +395,28 @@ async function runToolReal(run, tool, scenarioId, progressStart, progressEnd) {
     appendLog(run, tool, "Merged Postman environment keys with Licenta_values runtime values.");
   }
 
-  const totalTests = tool === "Cypress" ? await countCypressIts(scenarioId) : 0;
+  const totalTests = tool === "Cypress"
+    ? await countCypressIts(scenarioId)
+    : tool === "Selenium"
+      ? await countSeleniumIts(scenarioId)
+      : 0;
   let completedTests = 0;
 
   return new Promise((resolve) => {
     let finished = false;
     let sawOutput = false;
     let stdout = "";
+    let stderr = "";
     const startedAt = Date.now();
 
     appendLog(run, tool, `Launching: ${spec.cmd} ${spec.args.join(" ")}`);
 
     const child = spawn(spec.cmd, spec.args, {
-      cwd: ROOT_DIR,
+      cwd: spec.cwd ?? ROOT_DIR,
       env: {
         ...process.env,
         CYPRESS_BASE_URL: process.env.CYPRESS_BASE_URL ?? `http://${HOST}:${PORT}`,
+        HEADLESS: process.env.HEADLESS ?? "true",
       },
       stdio: ["ignore", "pipe", "pipe"],
     });
@@ -353,6 +425,7 @@ async function runToolReal(run, tool, scenarioId, progressStart, progressEnd) {
       sawOutput = true;
       const textChunk = chunk.toString("utf8");
       if (kind === "out") stdout += textChunk;
+      if (kind === "err") stderr += textChunk;
       for (const line of textChunk.split(/\r?\n/)) {
         if (!line.trim()) continue;
         appendLog(run, tool, `${kind}: ${line}`);
@@ -360,21 +433,29 @@ async function runToolReal(run, tool, scenarioId, progressStart, progressEnd) {
           run.progress.percent = Math.max(run.progress.percent, progressStart + 2);
           run.progress.label = "Cypress run started";
         }
+        if (tool === "Selenium" && /^(\s*)[^✓✔√✖×].+$/u.test(line) && line.includes(scenarioId)) {
+          run.progress.percent = Math.max(run.progress.percent, progressStart + 2);
+          run.progress.label = "Selenium suite started";
+        }
         if (tool === "Cypress" && line.includes("Running:")) {
           run.progress.percent = Math.max(run.progress.percent, progressStart + 5);
           run.progress.label = "Cypress spec is running";
         }
-        if (tool === "Cypress" && /^(\s*)(✓|√|✖|×|\d+\))\s+/.test(line)) {
+        if ((tool === "Cypress" || tool === "Selenium") && /^(\s*)(✓|✔|√|✖|×|\d+\))\s+/u.test(line)) {
           completedTests = Math.min(totalTests || completedTests + 1, completedTests + 1);
           const percent = totalTests > 0
             ? Math.min(progressEnd - 1, Math.round(progressStart + (completedTests / totalTests) * (progressEnd - progressStart)))
             : run.progress.percent;
           run.progress.percent = Math.max(run.progress.percent, percent);
-          run.progress.label = `Completed ${completedTests}${totalTests ? ` of ${totalTests}` : ""} Cypress tests`;
+          run.progress.label = `Completed ${completedTests}${totalTests ? ` of ${totalTests}` : ""} ${tool} tests`;
         }
         if (tool === "Cypress" && line.includes("(Run Finished)")) {
           run.progress.percent = Math.max(run.progress.percent, progressEnd - 1);
           run.progress.label = "Cypress run finished";
+        }
+        if (tool === "Selenium" && /\d+\s+passing\b|\d+\s+failing\b/i.test(line)) {
+          run.progress.percent = Math.max(run.progress.percent, progressEnd - 1);
+          run.progress.label = "Selenium run summary generated";
         }
         if (tool === "Postman" && line.includes("→")) {
           run.progress.percent = Math.max(run.progress.percent, progressStart + 8);
@@ -404,9 +485,12 @@ async function runToolReal(run, tool, scenarioId, progressStart, progressEnd) {
       appendLog(run, tool, `Process exit code: ${code}`);
 
       if (!sawOutput) appendLog(run, tool, "No output captured from runner.");
+      const resultOutput = outputForResult(tool, stdout, stderr);
       resolve(
         tool === "Cypress"
-          ? resultFromCypressSpecOutput(stdout, durationSec, code)
+          ? resultFromCypressSpecOutput(resultOutput, durationSec, code)
+          : tool === "Selenium"
+            ? resultFromSeleniumSpecOutput(resultOutput, durationSec, code)
           : tool === "Postman"
             ? await resultFromPostmanReport(spec.reportPath, durationSec, code)
           : { tool, passed: 0, failed: code === 0 ? 0 : 1, time: Number(durationSec.toFixed(1)), stability: null, status: code === 0 ? "Passed" : "Failed" }
@@ -415,41 +499,58 @@ async function runToolReal(run, tool, scenarioId, progressStart, progressEnd) {
   });
 }
 
-async function executeRun(runId, scenarioId) {
+async function executeRun(runId, scenarioId, selectedTools = testingTools) {
   const run = runs.get(runId);
   if (!run) return;
 
   run.status = "Running";
   run.startedAt = nowIso();
-  run.progress = { percent: 0, label: "Preparing shared test scenario", activeTool: "Cypress", completedTools: [] };
+  run.progress = {
+    percent: 0,
+    label: "Preparing shared test scenario",
+    activeTool: selectedTools[0] ?? null,
+    completedTools: [],
+    selectedTools: [...selectedTools],
+  };
 
   appendLog(run, "Runner", `Scenario selected: ${scenarioId}`);
-  appendLog(run, "Runner", "Initializing real Cypress execution workflow.");
+  appendLog(run, "Runner", `Initializing real ${selectedTools.join(", ")} execution workflow.`);
 
   const history = await readJsonFile(HISTORY_PATH, []);
 
   const completedTools = [];
   const results = [];
 
-  for (const [index, tool] of testingTools.entries()) {
+  for (const [index, tool] of selectedTools.entries()) {
     run.progress.activeTool = tool;
     run.progress.completedTools = [...completedTools];
-    run.progress.percent = 0;
+    run.progress.selectedTools = [...selectedTools];
     run.progress.label = `Current environment: ${tool}`;
+    const progressStart = (index / selectedTools.length) * 100;
+    const progressEnd = ((index + 1) / selectedTools.length) * 100;
 
-    const result = await runToolReal(run, tool, scenarioId, 0, 100);
+    const result = await runToolReal(run, tool, scenarioId, progressStart, progressEnd);
     const stability = computeStability(history, scenarioId, tool);
-    results.push({ ...result, stability: stability ?? 95 });
+    results.push({
+      ...result,
+      stability: result.status === "Not Implemented" ? null : stability ?? 95,
+    });
     completedTools.push(tool);
 
     run.progress.completedTools = [...completedTools];
-    run.progress.percent = 100;
+    run.progress.percent = progressEnd;
     run.progress.label = `${tool} completed`;
   }
 
   run.results = results;
   run.status = results.some((r) => r.status === "Failed") ? "Failed" : "Completed";
-  run.progress = { percent: 100, label: "Execution complete", activeTool: null, completedTools: [...testingTools] };
+  run.progress = {
+    percent: 100,
+    label: "Execution complete",
+    activeTool: null,
+    completedTools: [...selectedTools],
+    selectedTools: [...selectedTools],
+  };
   run.finishedAt = nowIso();
 
   appendLog(run, "Runner", "Comparison table and recommendation generated.");
@@ -473,6 +574,13 @@ async function handleApi(req, res, urlObj) {
     const body = await parseBody(req);
     const scenarioId = body?.scenarioId;
     if (!scenarioId || typeof scenarioId !== "string") return json(res, 400, { error: "Missing scenarioId" });
+    const requestedTool = body?.tool;
+    const selectedTools = requestedTool
+      ? testingTools.includes(requestedTool)
+        ? [requestedTool]
+        : null
+      : testingTools;
+    if (!selectedTools) return json(res, 400, { error: `Unknown tool: ${requestedTool}` });
 
     const runId = randomUUID();
     const run = {
@@ -481,7 +589,7 @@ async function handleApi(req, res, urlObj) {
       status: "Queued",
       startedAt: null,
       finishedAt: null,
-      progress: { percent: 0, label: "Queued", activeTool: null, completedTools: [] },
+      progress: { percent: 0, label: "Queued", activeTool: null, completedTools: [], selectedTools: [...selectedTools] },
       logs: [],
       results: null,
     };
@@ -489,7 +597,7 @@ async function handleApi(req, res, urlObj) {
     json(res, 200, { runId });
 
     // Execute asynchronously.
-    executeRun(runId, scenarioId).catch((err) => {
+    executeRun(runId, scenarioId, selectedTools).catch((err) => {
       const current = runs.get(runId);
       if (!current) return;
       current.status = "Failed";

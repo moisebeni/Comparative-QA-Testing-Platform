@@ -19,7 +19,6 @@
         <a href="#scenarios">Scenarios</a>
         <a href="#execution">Execution</a>
         <a href="#results">Results</a>
-        <a href="#tools">Tools</a>
       </nav>
 
       <a class="topbar-action" href="#scenarios">Run QA tests</a>
@@ -28,9 +27,9 @@
     <main class="page">
       <section class="hero" id="overview">
         <div class="hero-copy reveal">
-          <h1>Run real Cypress and Postman tests from one clean workspace.</h1>
+          <h1>Run real Cypress, Selenium, and Postman tests from one clean workspace.</h1>
           <p class="subtitle">
-            A modern interface for executing matching Cypress specs and Postman folders, then tracking results by
+            A modern interface for executing matching Cypress specs, Selenium suites, and Postman folders, then tracking results by
             speed, stability, passed tests, and final status.
           </p>
 
@@ -38,31 +37,6 @@
             <a class="primary-link" href="#scenarios">Start a scenario</a>
           </div>
         </div>
-
-        <aside class="hero-lab reveal" aria-label="Execution preview">
-          <div class="lab-topline">
-            <span class="pulse-dot"></span>
-            <span>QA runner</span>
-          </div>
-
-          <div class="lab-orbit" aria-hidden="true">
-            <div class="lab-node cypress">Cy</div>
-            <div class="lab-node selenium">Fx</div>
-            <div class="lab-node postman">Su</div>
-            <div class="lab-core">E2E</div>
-          </div>
-
-          <div class="hero-summary">
-            <div>
-              <span class="summary-label">Best tool</span>
-              <strong id="heroBestTool">Pending</strong>
-            </div>
-            <div>
-              <span class="summary-label">Average time</span>
-              <strong id="heroAvgTime">--</strong>
-            </div>
-          </div>
-        </aside>
       </section>
 
       <section class="stats-grid reveal" aria-label="Dashboard statistics">
@@ -72,7 +46,7 @@
         </article>
         <article class="stat-card">
           <span>Testing Tools</span>
-          <strong>2</strong>
+          <strong>3</strong>
         </article>
         <article class="stat-card">
           <span>Last Run Status</span>
@@ -106,7 +80,6 @@
               <p class="section-eyebrow">Live execution</p>
               <h2>Runner timeline</h2>
             </div>
-            <span class="status-badge idle" id="executionBadge">Idle</span>
           </div>
 
           <div class="selected-scenario">
@@ -167,40 +140,6 @@
           <h2 id="recommendationTitle">Recommended Tool</h2>
         </div>
         <p id="recommendationText"></p>
-      </section>
-
-      <section class="tool-overview reveal" id="tools">
-        <div class="section-header">
-          <div>
-            <p class="section-eyebrow">Tool overview</p>
-            <h2>What the runner uses</h2>
-          </div>
-        </div>
-
-        <div class="tool-grid">
-          <article class="tool-card cypress">
-            <span class="tool-logo">Cy</span>
-            <h3>Cypress</h3>
-            <p>Browser-level E2E specs copied from the CypressLicenta repository.</p>
-          </article>
-          <article class="tool-card selenium">
-            <span class="tool-logo">Pm</span>
-            <h3>Postman</h3>
-            <p>API workflows from the Licenta Postman collection, executed through Newman.</p>
-          </article>
-          <article class="tool-card postman">
-            <span class="tool-logo">Env</span>
-            <h3>Environment</h3>
-            <p>Shared variables from the Licenta Postman environment and Cypress fixtures.</p>
-          </article>
-        </div>
-      </section>
-
-      <section class="api-strip reveal" aria-label="Future API endpoints">
-        <span>Backend-ready</span>
-        <code>POST /api/run-test</code>
-        <code>GET /api/test-results</code>
-        <code>GET /api/test-history</code>
       </section>
     </main>
 
