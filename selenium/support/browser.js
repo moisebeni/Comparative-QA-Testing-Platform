@@ -19,6 +19,7 @@ class BrowserSession {
     if (headless) {
       options.addArguments("--headless=new");
     }
+    options.setPageLoadStrategy("eager");
 
     const chromeBinaryPath = process.env.CHROME_BINARY_PATH || "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
     try {
@@ -36,7 +37,9 @@ class BrowserSession {
     let service = null;
     const explicitDriverPath = process.env.CHROMEDRIVER_PATH || null;
     const bundledDriverPath = path.join(
-      process.cwd(),
+      __dirname,
+      "..",
+      "..",
       "node_modules",
       "chromedriver",
       "lib",
@@ -49,8 +52,11 @@ class BrowserSession {
     if (candidateDriverPath) {
       service = new chrome.ServiceBuilder(candidateDriverPath)
         .setHostname("127.0.0.1")
-        .setLoopback(true)
-        .setPort(Number(process.env.CHROMEDRIVER_PORT || 9515));
+        .setLoopback(true);
+
+      if (process.env.CHROMEDRIVER_PORT) {
+        service.setPort(Number(process.env.CHROMEDRIVER_PORT));
+      }
     }
 
     const builder = new Builder()
@@ -62,6 +68,11 @@ class BrowserSession {
     }
 
     this.driver = await builder.build();
+    await this.driver.manage().setTimeouts({
+      implicit: 0,
+      pageLoad: Number(process.env.SELENIUM_PAGE_LOAD_TIMEOUT_MS || 60000),
+      script: Number(process.env.SELENIUM_SCRIPT_TIMEOUT_MS || 30000),
+    });
     return this.driver;
   }
 

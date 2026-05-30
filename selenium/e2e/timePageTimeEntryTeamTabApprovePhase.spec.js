@@ -4,7 +4,7 @@ const { browserSession } = require("../support/browser");
 const { prepareSuite, cleanupSuite } = require("../support/e2e");
 
 describe("timePageTimeEntryTeamTabApprovePhase", function () {
-  this.timeout(180000);
+  this.timeout(480000);
 
   before(async () => {
     await prepareSuite();

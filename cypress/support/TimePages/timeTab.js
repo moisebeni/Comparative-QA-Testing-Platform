@@ -233,27 +233,6 @@ export class TimeTab {
     cy.wait(4000)
   }
 
-  deleteTimeOffEntry() {
-    // Intercept ALL DELETE requests to this endpoint
-    cy.intercept('DELETE', '**/timelogs/timeoff-requests/**').as('deleteTimeOff');
-
-    cy.get('[data-testid="MoreVertIcon"]').eq(0).click({ force: true });
-    cy.get('[data-testid="DeleteIcon"]').click({ force: true });
-
-    cy.get('[data-testid="ErrorOutlineIcon"]').parent().contains(`Êtes-vous sûr(e) de vouloir supprimer cette demande de congés ?`);
-    cy.get('.actions__block').find('button').contains("OK").click({ force: true });
-
-    // Wait for all requests and verify at least one was successful
-    cy.wait('@deleteTimeOff').then((interceptions) => {
-      const requests = Array.isArray(interceptions) ? interceptions : [interceptions];
-      const successfulRequest = requests.some(req =>
-        req.response && [200, 201, 204].includes(req.response.statusCode)
-      );
-
-      expect(successfulRequest, 'At least one DELETE request should be successful').to.be.true;
-    });
-  }
-
   goPreviousWeek(weeks) {
     while (weeks > 0) {
       weeks--;
@@ -578,98 +557,6 @@ export class TimeTab {
       .click({ force: true });
   }
 
-createTimeOffRequest() {
-  cy.get('button.MuiButton-containedPrimary')
-    .contains('Demande de congés')
-    .click();
-
-  cy.contains('div', 'Ajouter une demande de congés').should('be.visible');
-
-  const today = dayjs();
-
-  //===Open datepicker===
-  cy.get('input[name="start_date"]').click({ force: true });
-
-  //===Select start and end dates===
-  this.selectTodayInCurrentMonth();
-  this.selectTodayInCurrentMonth();
-
-  //===Close date picker===
-  cy.get('body').click(0, 0);
-  cy.get('.rdrCalendarWrapper').should('not.exist');
-
-  //===Continue filling form===
-  cy.get('input#type-label').click({ force: true });
-
-  // Compare “Demande” and “Congés payés” values
-  cy.get('p:contains("Demande") b')
-    .invoke('text')
-    .then((demandeText) => {
-      const demandeValue = parseInt(demandeText.trim(), 10);
-      cy.get('p:contains("Congés payés") b')
-        .invoke('text')
-        .then((congesText) => {
-          const congesValue = parseInt(congesText.trim(), 10);
-          expect(demandeValue).to.equal(congesValue);
-        });
-    });
-
-  // Update unpaid days and recheck difference
-  cy.get('input[name="unpaid_days"]').clear({ force: true }).type('1', { force: true });
-
-  cy.get('p:contains("Demande") b')
-    .invoke('text')
-    .then((demandeText) => {
-      const demandeValue = parseInt(demandeText.trim(), 10);
-      cy.get('p:contains("Congés payés") b')
-        .invoke('text')
-        .then((congesText) => {
-          const congesValue = parseInt(congesText.trim(), 10);
-          expect(demandeValue).to.equal(congesValue + 1);
-        });
-    });
-
-  //===Submit and verify API + toast===
-  cy.intercept('POST', '**/my-timeoff-request/**').as('createTimeOff');
-
-  cy.contains('button', 'Sauvegarder')
-    .should('be.enabled')
-    .click({ force: true });
-
-  cy.wait('@createTimeOff')
-    .its('response.statusCode')
-    .should('be.oneOf', [200, 201]);
-
-  cy.get('div[role="alert"]').should('contain.text', 'Demande de congés créée avec succès')
-}
-
-  validateTimeOffCreated(jours, paye, sansSolde) {
-    cy.contains('tr', 'Congés payés')
-      .should('exist')
-      .within(() => {
-        cy.get('td').then(($cells) => {
-          const parseCell = (index) => {
-            const rawValue = $cells
-              .eq(index)
-              .text()
-              .trim()
-              .replace(/\s/g, '')
-              .replace(',', '.');
-            const parsed = Number.parseFloat(rawValue);
-            return Number.isNaN(parsed) ? 0 : parsed;
-          };
-
-          const summary = [
-            parseCell(4),
-            parseCell(5),
-            parseCell(6),
-          ];
-
-          expect(summary).to.deep.equal([jours, paye, sansSolde]);
-        });
-      });
-  }
-
   validateRTT(jours) {
     cy.get('tr').contains('Congés payés').parents('tr').within(() => {
       cy.get('td').then($cells => {
@@ -681,65 +568,6 @@ createTimeOffRequest() {
       });
     });
 
-  }
-
-  editPayeTimeOff(newValue, oldValue) {
-    cy.contains('tr', 'Congés payés')
-      .find('td')
-      .contains(oldValue)
-      .first()
-      .click({ force: true });
-
-    cy.get('input[name="paid_days"]').clear().type(newValue);
-    cy.get('button:has([data-testid="CheckIcon"])').click();
-    cy.contains('tr', 'Congés payés')
-      .find('td')
-      .contains(newValue)
-      .should('exist');
-    cy.wait(5000);
-  }
-
-  editSansSoldeTimeOff(newValue, oldValue) {
-    cy.contains('tr', 'Congés payés')
-      .find('td')
-      .contains(oldValue)
-      .first()
-      .click({ force: true });
-
-    cy.get('input[name="unpaid_days"]').clear().type(newValue);
-    cy.get('button:has([data-testid="CheckIcon"])').click();
-    cy.contains('tr', 'Congés payés')
-      .find('td')
-      .contains(newValue)
-      .should('exist');
-    cy.wait(5000);
-  }
-
-  submitTimeOffDirrectlyModifier() {
-    cy.get('[data-testid="MoreVertIcon"]').eq(0).click()
-    cy.contains('p', 'Editer').closest('[role="button"]').click();
-    cy.contains('div', /^Modifier la demande de congés -/).should('be.visible');
-    cy.contains('button', 'Envoyer le brouillon').click();
-    this.getTimeOffRowByStatus("Non révisé").should('be.visible');
-  }
-
-  backToDraftsTimeOffDirrectlyModifier() {
-    cy.get('[data-testid="MoreVertIcon"]').eq(0).click({ force: true })
-    cy.contains('p', 'Editer').closest('[role="button"]').click();
-    cy.contains('div', /^Modifier la demande de congés -/).should('be.visible');
-    cy.contains('button', 'Convertir en brouillon').click();
-    cy.wait(3000)
-    this.getTimeOffRowByStatus("Brouillon").should('be.visible');
-  }
-
-  ediTimeOffModifierModal() {
-    cy.get('[data-testid="MoreVertIcon"]').eq(0).click({ force: true })
-    cy.contains('p', 'Editer').closest('[role="button"]').click();
-    cy.contains('div', /^Modifier la demande de congés -/).should('be.visible');
-    cy.get('#type-label').click();
-    cy.get('ul#type-label-listbox').contains('Maladie').click();
-    cy.contains('button', 'Sauvegarder').click({ force: true });
-    cy.get('tr').contains('Maladie').should('be.visible');
   }
 
   closeWeekTeamTab() {

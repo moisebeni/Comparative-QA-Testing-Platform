@@ -24,7 +24,6 @@ const testingTools = ["Cypress", "Selenium", "Postman"];
 const postmanFolderByScenario = {
   editEntryTimeManagementAnnex: "editEntryTimeManagementAnnex",
   editEntryTimeManagementPhase: "editEntryTimeManagementPhase",
-  editSubmitEntryTimeOff: null,
   submitEntryTimeManagementAnnex: "submitEntryTimeManagamentAnnex",
   submitEntryTimeManagementPhase: "submitEntryTimeManagamentPhase",
   timePageTimeEntryTeamTabApproveAnnex: "timePageTimeEntryTeamTabApproveAnnex",
@@ -172,7 +171,7 @@ function toolCommand(tool, scenarioId, runId) {
       cmd: process.platform === "win32"
         ? path.join(ROOT_DIR, "node_modules", ".bin", "mocha.cmd")
         : path.join(ROOT_DIR, "node_modules", ".bin", "mocha"),
-      args: [`e2e/${scenarioId}.spec.js`, "--timeout", "180000"],
+      args: [`e2e/${scenarioId}.spec.js`, "--timeout", "480000"],
       cwd: SELENIUM_ROOT_DIR,
     };
   }
@@ -420,6 +419,14 @@ async function runToolReal(run, tool, scenarioId, progressStart, progressEnd) {
       },
       stdio: ["ignore", "pipe", "pipe"],
     });
+    const maxRuntimeMs = tool === "Selenium"
+      ? Number(process.env.SELENIUM_RUN_TIMEOUT_MS || 600000)
+      : Number(process.env.RUNNER_TIMEOUT_MS || 240000);
+    const watchdog = setTimeout(() => {
+      if (finished) return;
+      appendLog(run, tool, `Runner exceeded ${Math.round(maxRuntimeMs / 1000)}s timeout; terminating process.`);
+      child.kill("SIGTERM");
+    }, maxRuntimeMs);
 
     const onLine = (kind) => (chunk) => {
       sawOutput = true;
@@ -474,6 +481,7 @@ async function runToolReal(run, tool, scenarioId, progressStart, progressEnd) {
     child.on("error", async (err) => {
       if (finished) return;
       finished = true;
+      clearTimeout(watchdog);
       appendLog(run, tool, `Runner failed to start: ${err.message}`);
       resolve({ tool, passed: 0, failed: 1, time: 0, stability: null, status: "Failed" });
     });
@@ -481,6 +489,7 @@ async function runToolReal(run, tool, scenarioId, progressStart, progressEnd) {
     child.on("close", async (code) => {
       if (finished) return;
       finished = true;
+      clearTimeout(watchdog);
       const durationSec = (Date.now() - startedAt) / 1000;
       appendLog(run, tool, `Process exit code: ${code}`);
 

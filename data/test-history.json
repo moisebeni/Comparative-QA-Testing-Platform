@@ -140,16 +140,6 @@
     "finishedAt": "2026-05-20T21:01:16.841Z"
   },
   {
-    "runId": "9db6af39-b5f1-42c8-8d5a-353e84a1f106",
-    "scenarioId": "editSubmitEntryTimeOff",
-    "tool": "Cypress",
-    "passed": 12,
-    "failed": 0,
-    "time": 37.9,
-    "status": "Passed",
-    "finishedAt": "2026-05-20T21:02:16.114Z"
-  },
-  {
     "runId": "1798c470-9270-425d-b4c0-2f1b1315a93c",
     "scenarioId": "submitEntryTimeManagementAnnex",
     "tool": "Cypress",
@@ -220,16 +210,6 @@
     "finishedAt": "2026-05-20T21:15:56.857Z"
   },
   {
-    "runId": "e1f3a085-b678-4499-b6dd-ea17b9fa7f3d",
-    "scenarioId": "editSubmitEntryTimeOff",
-    "tool": "Cypress",
-    "passed": 12,
-    "failed": 0,
-    "time": 37.9,
-    "status": "Passed",
-    "finishedAt": "2026-05-20T21:17:44.389Z"
-  },
-  {
     "runId": "72d132aa-21c4-4993-b285-b324440a3cdf",
     "scenarioId": "submitEntryTimeManagementAnnex",
     "tool": "Cypress",
@@ -288,26 +268,6 @@
     "time": 2,
     "status": "Failed",
     "finishedAt": "2026-05-20T21:58:55.546Z"
-  },
-  {
-    "runId": "742ad3b0-e46c-40e9-8bf3-d1f76e3dcaf9",
-    "scenarioId": "editSubmitEntryTimeOff",
-    "tool": "Cypress",
-    "passed": 12,
-    "failed": 0,
-    "time": 38.2,
-    "status": "Passed",
-    "finishedAt": "2026-05-20T22:00:05.110Z"
-  },
-  {
-    "runId": "742ad3b0-e46c-40e9-8bf3-d1f76e3dcaf9",
-    "scenarioId": "editSubmitEntryTimeOff",
-    "tool": "Postman",
-    "passed": 0,
-    "failed": 1,
-    "time": 0,
-    "status": "Failed",
-    "finishedAt": "2026-05-20T22:00:05.110Z"
   },
   {
     "runId": "5362241a-a35c-4491-90ca-552efdca62b3",
@@ -388,26 +348,6 @@
     "time": 1.5,
     "status": "Passed",
     "finishedAt": "2026-05-20T22:15:33.494Z"
-  },
-  {
-    "runId": "178a10b9-719f-4a59-8f73-ebf57dfc6f10",
-    "scenarioId": "editSubmitEntryTimeOff",
-    "tool": "Cypress",
-    "passed": 12,
-    "failed": 0,
-    "time": 37.8,
-    "status": "Passed",
-    "finishedAt": "2026-05-20T22:17:59.811Z"
-  },
-  {
-    "runId": "178a10b9-719f-4a59-8f73-ebf57dfc6f10",
-    "scenarioId": "editSubmitEntryTimeOff",
-    "tool": "Postman",
-    "passed": 0,
-    "failed": 1,
-    "time": 0,
-    "status": "Failed",
-    "finishedAt": "2026-05-20T22:17:59.811Z"
   },
   {
     "runId": "9e044800-92bb-40d6-bc2e-d9b744222b59",
@@ -900,36 +840,6 @@
     "finishedAt": "2026-05-26T08:55:41.553Z"
   },
   {
-    "runId": "6c6ebe4e-b03f-4b04-b1a4-84f5e2850b1f",
-    "scenarioId": "editSubmitEntryTimeOff",
-    "tool": "Cypress",
-    "passed": 12,
-    "failed": 0,
-    "time": 38.1,
-    "status": "Passed",
-    "finishedAt": "2026-05-26T08:59:06.587Z"
-  },
-  {
-    "runId": "6c6ebe4e-b03f-4b04-b1a4-84f5e2850b1f",
-    "scenarioId": "editSubmitEntryTimeOff",
-    "tool": "Selenium",
-    "passed": 5,
-    "failed": 7,
-    "time": 120,
-    "status": "Failed",
-    "finishedAt": "2026-05-26T08:59:06.587Z"
-  },
-  {
-    "runId": "6c6ebe4e-b03f-4b04-b1a4-84f5e2850b1f",
-    "scenarioId": "editSubmitEntryTimeOff",
-    "tool": "Postman",
-    "passed": 0,
-    "failed": 1,
-    "time": 0,
-    "status": "Failed",
-    "finishedAt": "2026-05-26T08:59:06.587Z"
-  },
-  {
     "runId": "33178d6f-8517-4efc-8bf4-598a45563167",
     "scenarioId": "editEntryTimeManagementAnnex",
     "tool": "Cypress",
@@ -958,36 +868,6 @@
     "time": 1.7,
     "status": "Passed",
     "finishedAt": "2026-05-26T09:13:06.859Z"
-  },
-  {
-    "runId": "b916298a-caa1-4b07-8d74-87a8b236b724",
-    "scenarioId": "editSubmitEntryTimeOff",
-    "tool": "Cypress",
-    "passed": 12,
-    "failed": 0,
-    "time": 45,
-    "status": "Passed",
-    "finishedAt": "2026-05-26T11:11:30.072Z"
-  },
-  {
-    "runId": "b916298a-caa1-4b07-8d74-87a8b236b724",
-    "scenarioId": "editSubmitEntryTimeOff",
-    "tool": "Selenium",
-    "passed": 5,
-    "failed": 7,
-    "time": 120,
-    "status": "Failed",
-    "finishedAt": "2026-05-26T11:11:30.072Z"
-  },
-  {
-    "runId": "b916298a-caa1-4b07-8d74-87a8b236b724",
-    "scenarioId": "editSubmitEntryTimeOff",
-    "tool": "Postman",
-    "passed": 0,
-    "failed": 1,
-    "time": 0,
-    "status": "Failed",
-    "finishedAt": "2026-05-26T11:11:30.072Z"
   },
   {
     "runId": "3c253f59-228c-4ad6-b034-8221145036b5",
@@ -1168,5 +1048,235 @@
     "time": 2,
     "status": "Passed",
     "finishedAt": "2026-05-27T18:08:56.598Z"
+  },
+  {
+    "runId": "8f59ffc4-56ee-4c32-b453-7f57e3cb6774",
+    "scenarioId": "editEntryTimeManagementAnnex",
+    "tool": "Cypress",
+    "passed": 0,
+    "failed": 1,
+    "time": 0,
+    "status": "Failed",
+    "finishedAt": "2026-05-30T13:53:07.662Z"
+  },
+  {
+    "runId": "8f59ffc4-56ee-4c32-b453-7f57e3cb6774",
+    "scenarioId": "editEntryTimeManagementAnnex",
+    "tool": "Selenium",
+    "passed": 0,
+    "failed": 1,
+    "time": 0,
+    "status": "Failed",
+    "finishedAt": "2026-05-30T13:53:07.662Z"
+  },
+  {
+    "runId": "8f59ffc4-56ee-4c32-b453-7f57e3cb6774",
+    "scenarioId": "editEntryTimeManagementAnnex",
+    "tool": "Postman",
+    "passed": 0,
+    "failed": 1,
+    "time": 0,
+    "status": "Failed",
+    "finishedAt": "2026-05-30T13:53:07.662Z"
+  },
+  {
+    "runId": "664f5e8b-410e-40b6-9c7a-1ac83ddea2ac",
+    "scenarioId": "timePageTimeEntryTeamTabRefusePhase",
+    "tool": "Cypress",
+    "passed": 8,
+    "failed": 0,
+    "time": 59.3,
+    "status": "Passed",
+    "finishedAt": "2026-05-30T14:07:59.010Z"
+  },
+  {
+    "runId": "664f5e8b-410e-40b6-9c7a-1ac83ddea2ac",
+    "scenarioId": "timePageTimeEntryTeamTabRefusePhase",
+    "tool": "Postman",
+    "passed": 0,
+    "failed": 1,
+    "time": 0,
+    "status": "Failed",
+    "finishedAt": "2026-05-30T14:07:59.010Z"
+  },
+  {
+    "runId": "5c460112-311a-46d0-a48b-eb0006df39fc",
+    "scenarioId": "timePageTimeEntryTeamTabRefusePhase",
+    "tool": "Postman",
+    "passed": 7,
+    "failed": 0,
+    "time": 2,
+    "status": "Passed",
+    "finishedAt": "2026-05-30T14:19:14.055Z"
+  },
+  {
+    "runId": "55ce52e4-a674-4ec7-9224-e305c307321a",
+    "scenarioId": "timePageTimeEntryTeamTabRefusePhase",
+    "tool": "Selenium",
+    "passed": 0,
+    "failed": 1,
+    "time": 120,
+    "status": "Failed",
+    "finishedAt": "2026-05-30T14:20:36.837Z"
+  },
+  {
+    "runId": "a9665db5-5100-447e-9beb-038fde6b3150",
+    "scenarioId": "timePageTimeEntryTeamTabRefusePhase",
+    "tool": "Selenium",
+    "passed": 0,
+    "failed": 1,
+    "time": 180,
+    "status": "Failed",
+    "finishedAt": "2026-05-30T14:24:40.717Z"
+  },
+  {
+    "runId": "d5388044-f86a-46df-9494-01f980c599f5",
+    "scenarioId": "timePageTimeEntryTeamTabRefusePhase",
+    "tool": "Selenium",
+    "passed": 0,
+    "failed": 1,
+    "time": 240,
+    "status": "Failed",
+    "finishedAt": "2026-05-30T14:31:38.607Z"
+  },
+  {
+    "runId": "8b5fd5c3-67ab-4d3a-b387-daed9b813aef",
+    "scenarioId": "timePageTimeEntryTeamTabRefusePhase",
+    "tool": "Selenium",
+    "passed": 0,
+    "failed": 1,
+    "time": 240,
+    "status": "Failed",
+    "finishedAt": "2026-05-30T14:32:16.545Z"
+  },
+  {
+    "runId": "540892e9-dcf2-4a1a-bcbc-800760d61737",
+    "scenarioId": "timePageTimeEntryTeamTabRefusePhase",
+    "tool": "Postman",
+    "passed": 7,
+    "failed": 0,
+    "time": 2.2,
+    "status": "Passed",
+    "finishedAt": "2026-05-30T14:34:53.154Z"
+  },
+  {
+    "runId": "1c81b501-335d-474b-8f4b-8d3b3a6d344a",
+    "scenarioId": "timePageTimeEntryTeamTabRefusePhase",
+    "tool": "Selenium",
+    "passed": 0,
+    "failed": 1,
+    "time": 68.9,
+    "status": "Failed",
+    "finishedAt": "2026-05-30T14:36:33.738Z"
+  },
+  {
+    "runId": "0888c164-3d9c-4021-ad96-67ab65b9a134",
+    "scenarioId": "timePageTimeEntryTeamTabRefusePhase",
+    "tool": "Selenium",
+    "passed": 0,
+    "failed": 1,
+    "time": 180,
+    "status": "Failed",
+    "finishedAt": "2026-05-30T14:40:07.661Z"
+  },
+  {
+    "runId": "5b1045dc-8553-4813-a7be-6de6a2c5eaac",
+    "scenarioId": "timePageTimeEntryTeamTabRefusePhase",
+    "tool": "Selenium",
+    "passed": 0,
+    "failed": 1,
+    "time": 180,
+    "status": "Failed",
+    "finishedAt": "2026-05-30T14:52:15.891Z"
+  },
+  {
+    "runId": "2add8e82-74d0-4de6-80a1-5f363075ac46",
+    "scenarioId": "timePageTimeEntryTeamTabRefusePhase",
+    "tool": "Selenium",
+    "passed": 0,
+    "failed": 1,
+    "time": 180,
+    "status": "Failed",
+    "finishedAt": "2026-05-30T15:04:07.513Z"
+  },
+  {
+    "runId": "858aafd6-acf6-45fb-841f-a5f9308c6556",
+    "scenarioId": "timePageTimeEntryTeamTabRefusePhase",
+    "tool": "Selenium",
+    "passed": 0,
+    "failed": 1,
+    "time": 300,
+    "status": "Failed",
+    "finishedAt": "2026-05-30T15:09:55.320Z"
+  },
+  {
+    "runId": "610c5fb4-1554-4913-aece-07e1b57c3fc8",
+    "scenarioId": "timePageTimeEntryTeamTabRefusePhase",
+    "tool": "Selenium",
+    "passed": 0,
+    "failed": 1,
+    "time": 300,
+    "status": "Failed",
+    "finishedAt": "2026-05-30T15:38:19.634Z"
+  },
+  {
+    "runId": "29951459-4907-4348-9a4a-a99b2e0fb4b7",
+    "scenarioId": "editEntryTimeManagementPhase",
+    "tool": "Cypress",
+    "passed": 10,
+    "failed": 0,
+    "time": 72,
+    "status": "Passed",
+    "finishedAt": "2026-05-30T16:26:20.856Z"
+  },
+  {
+    "runId": "29951459-4907-4348-9a4a-a99b2e0fb4b7",
+    "scenarioId": "editEntryTimeManagementPhase",
+    "tool": "Selenium",
+    "passed": 10,
+    "failed": 0,
+    "time": 480,
+    "status": "Passed",
+    "finishedAt": "2026-05-30T16:26:20.856Z"
+  },
+  {
+    "runId": "29951459-4907-4348-9a4a-a99b2e0fb4b7",
+    "scenarioId": "editEntryTimeManagementPhase",
+    "tool": "Postman",
+    "passed": 5,
+    "failed": 0,
+    "time": 1.7,
+    "status": "Passed",
+    "finishedAt": "2026-05-30T16:26:20.856Z"
+  },
+  {
+    "runId": "94d9311e-4973-4356-b66d-1a36fcb2a970",
+    "scenarioId": "timePageTimeEntryTeamTabRefuseAnnex",
+    "tool": "Cypress",
+    "passed": 8,
+    "failed": 0,
+    "time": 45.5,
+    "status": "Passed",
+    "finishedAt": "2026-05-30T16:36:46.500Z"
+  },
+  {
+    "runId": "94d9311e-4973-4356-b66d-1a36fcb2a970",
+    "scenarioId": "timePageTimeEntryTeamTabRefuseAnnex",
+    "tool": "Selenium",
+    "passed": 7,
+    "failed": 1,
+    "time": 420,
+    "status": "Failed",
+    "finishedAt": "2026-05-30T16:36:46.500Z"
+  },
+  {
+    "runId": "94d9311e-4973-4356-b66d-1a36fcb2a970",
+    "scenarioId": "timePageTimeEntryTeamTabRefuseAnnex",
+    "tool": "Postman",
+    "passed": 7,
+    "failed": 0,
+    "time": 2.1,
+    "status": "Passed",
+    "finishedAt": "2026-05-30T16:36:46.500Z"
   }
 ]

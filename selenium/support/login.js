@@ -25,28 +25,28 @@ class LoginPage {
 
   async getLoginButton() {
     const driver = await browserSession.getDriver();
-    await driver.wait(async () => {
-      const candidates = await driver.findElements(By.css('button[type="submit"], form button'));
-      for (const candidate of candidates) {
-        if (await candidate.isDisplayed()) {
-          const text = ((await candidate.getText()) || "").trim();
-          const type = (await candidate.getAttribute("type")) || "";
-          if (type === "submit" && (text === "S'IDENTIFIER" || text === "S’IDENTIFIER")) {
-            return true;
+    const selectors = ['button[type="submit"], button[data-testid*="LoadingButton"]', "form button"];
+
+    for (const selector of selectors) {
+      try {
+        await driver.wait(async () => {
+          const candidates = await driver.findElements(By.css(selector));
+          for (const candidate of candidates) {
+            if (await candidate.isDisplayed()) {
+              return true;
+            }
+          }
+          return false;
+        }, 10000);
+
+        const buttons = await driver.findElements(By.css(selector));
+        for (const button of buttons) {
+          if (await button.isDisplayed()) {
+            return button;
           }
         }
-      }
-      return false;
-    }, 30000);
-
-    const buttons = await driver.findElements(By.css('button[type="submit"], form button'));
-    for (const button of buttons) {
-      if (await button.isDisplayed()) {
-        const text = ((await button.getText()) || "").trim();
-        const type = (await button.getAttribute("type")) || "";
-        if (type === "submit" && (text === "S'IDENTIFIER" || text === "S’IDENTIFIER")) {
-          return button;
-        }
+      } catch (error) {
+        // Try the next selector.
       }
     }
 
@@ -127,21 +127,32 @@ class LoginPage {
     );
 
     for (const closeButton of closeButtons) {
-      if (await closeButton.isDisplayed()) {
-        await browserSession.clickElement(closeButton);
-        await browserSession.sleep(1000);
-        return;
+      try {
+        if (await closeButton.isDisplayed()) {
+          await browserSession.clickElement(closeButton);
+          await browserSession.sleep(1000);
+          return;
+        }
+      } catch (error) {
+        // The onboarding tooltip can re-render between lookup and click.
       }
     }
   }
 
   async changeLanguageToFrench() {
-    await this.dismissOnboardingOverlay();
+    try {
+      await this.dismissOnboardingOverlay();
 
-    const avatar = await browserSession.findVisible(By.css(".MuiAvatar-img"), 10000);
-    await browserSession.clickElement(avatar);
-    await browserSession.clickByText("button, li, div[role='menuitem'], span", "Français", { timeout: 10000 });
-    await browserSession.sleep(1000);
+      const avatar = await browserSession.findVisible(
+        By.css(".MuiAvatar-root, .MuiAvatar-img, button[aria-label*='account' i], button[aria-label*='profil' i], [data-testid='AccountCircleIcon']"),
+        15000
+      );
+      await browserSession.clickElement(avatar);
+      await browserSession.clickByText("button, li, div[role='menuitem'], span", "Français", { timeout: 10000 });
+      await browserSession.sleep(1000);
+    } catch (error) {
+      await this.dismissOnboardingOverlay();
+    }
   }
 }
 

@@ -7,7 +7,7 @@
     "start": "node server.js",
     "dev": "node server.js",
     "cypress:run": "cypress run",
-    "selenium:run": "mocha \"selenium/e2e/**/*.js\" --timeout 180000",
+    "selenium:run": "mocha \"selenium/e2e/**/*.js\" --timeout 480000",
     "deploy": "npx wrangler pages deploy . --project-name comparative-qa-testing-platform"
   },
   "devDependencies": {

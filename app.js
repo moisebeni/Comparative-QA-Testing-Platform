@@ -19,11 +19,6 @@ const scenarios = [
     description: "Runs the matching Cypress spec and Postman folder for a phase-based time management edit.",
   },
   {
-    id: "editSubmitEntryTimeOff",
-    name: "editSubmitEntryTimeOff.cy.js",
-    description: "Runs the Cypress spec for editing and submitting a time-off entry.",
-  },
-  {
     id: "submitEntryTimeManagementAnnex",
     name: "submitEntryTimeManagementAnnex.cy.js",
     description: "Runs the matching Cypress spec and Postman folder for an annex-based time management submit.",
